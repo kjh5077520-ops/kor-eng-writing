@@ -1,0 +1,1757 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>영작 연습 - Korean to English</title>
+<style>
+  :root {
+    --bg: #f4f5f7;
+    --card-bg: #ffffff;
+    --text: #1a1d23;
+    --sub: #6b7280;
+    --accent: #4f46e5;
+    --accent-hover: #4338ca;
+    --correct: #16a34a;
+    --correct-bg: #f0fdf4;
+    --wrong: #dc2626;
+    --wrong-bg: #fef2f2;
+    --border: #e5e7eb;
+    --input-bg: #ffffff;
+    --chip-bg: #f4f5f7;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14161a;
+      --card-bg: #1e2128;
+      --text: #eef0f3;
+      --sub: #9aa1ac;
+      --accent: #818cf8;
+      --accent-hover: #a5b4fc;
+      --correct: #4ade80;
+      --correct-bg: #14291d;
+      --wrong: #f87171;
+      --wrong-bg: #2b1717;
+      --border: #2c303a;
+      --input-bg: #262a33;
+      --chip-bg: #262a33;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Apple SD Gothic Neo", "Segoe UI", sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .app {
+    width: 100%;
+    max-width: 560px;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  header h1 {
+    font-size: 1.4rem;
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+  }
+  header p {
+    margin: 0;
+    color: var(--sub);
+    font-size: 0.9rem;
+  }
+  .meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 0.85rem;
+    color: var(--sub);
+  }
+  .progress-bar {
+    height: 6px;
+    background: var(--border);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    width: 0%;
+    transition: width 0.3s ease;
+  }
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px 28px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .prompt-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--sub);
+    margin-bottom: 8px;
+  }
+  .prompt {
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 24px;
+    min-height: 2.8em;
+  }
+  input[type="text"] {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 1rem;
+    border-radius: 10px;
+    border: 1.5px solid var(--border);
+    background: var(--input-bg);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+  input[type="text"]:focus {
+    border-color: var(--accent);
+  }
+  input[type="text"]:disabled,
+  input[type="text"]:read-only {
+    opacity: 0.7;
+  }
+  .actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+  }
+  button {
+    flex: 1;
+    padding: 13px 16px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.05s ease;
+  }
+  button:active {
+    transform: scale(0.98);
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+  }
+  .btn-primary:hover {
+    background: var(--accent-hover);
+  }
+  .btn-secondary {
+    background: transparent;
+    color: var(--sub);
+    border: 1.5px solid var(--border);
+  }
+  .btn-secondary:hover {
+    color: var(--text);
+    border-color: var(--sub);
+  }
+  .feedback {
+    margin-top: 18px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct {
+    background: var(--correct-bg);
+    color: var(--correct);
+  }
+  .feedback.wrong {
+    background: var(--wrong-bg);
+    color: var(--wrong);
+  }
+  .feedback .answer-line {
+    margin-top: 6px;
+    color: var(--text);
+    opacity: 0.85;
+  }
+  .feedback .answer-line b { color: var(--text); }
+  .correction-list {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+    font-size: 0.88rem;
+    line-height: 1.8;
+  }
+  .diff-wrong {
+    color: var(--wrong);
+    font-weight: 700;
+    text-decoration: line-through;
+  }
+  .diff-right {
+    color: var(--correct);
+    font-weight: 700;
+  }
+  .summary {
+    text-align: center;
+    padding: 20px 0 6px;
+  }
+  .summary .score {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 8px 0;
+  }
+  .summary p {
+    color: var(--sub);
+    margin: 0 0 20px;
+  }
+  .setup-label {
+    font-size: 0.85rem;
+    color: var(--sub);
+    margin-bottom: 12px;
+  }
+  .count-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .chip {
+    flex: 0 0 auto;
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 999px;
+    border: 1.5px solid var(--border);
+    background: var(--chip-bg);
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .chip:hover {
+    border-color: var(--accent);
+  }
+  .chip.selected {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+  .test-card-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 18px 20px;
+    border-radius: 12px;
+    border: 1.5px solid var(--border);
+    background: var(--chip-bg);
+    color: var(--text);
+    cursor: pointer;
+    margin-bottom: 12px;
+    transition: all 0.15s ease;
+  }
+  .test-card-btn:last-child { margin-bottom: 0; }
+  .test-card-btn:hover {
+    border-color: var(--accent);
+  }
+  .test-card-btn .test-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .test-card-btn .test-desc {
+    font-size: 0.85rem;
+    color: var(--sub);
+    font-weight: 400;
+  }
+  .home-link {
+    text-align: center;
+    margin-bottom: 16px;
+    display: none;
+  }
+  .home-link button {
+    width: auto;
+    padding: 6px 14px;
+    font-size: 0.8rem;
+  }
+  .back-btn {
+    display: block;
+    width: auto;
+    margin-bottom: 16px;
+    padding: 6px 14px;
+    font-size: 0.8rem;
+  }
+  footer {
+    text-align: center;
+    margin-top: 18px;
+    color: var(--sub);
+    font-size: 0.78rem;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>영작 연습</h1>
+    <p>한글 문장을 보고 영어로 작문해보세요</p>
+  </header>
+
+  <div class="card" id="screenMonth">
+    <div class="prompt-label">월 선택</div>
+    <button class="test-card-btn" id="mySentencesBtn" type="button">
+      <div class="test-title">내 문장</div>
+      <div class="test-desc">내가 추가한 문장 모음 75문제</div>
+    </button>
+    <button class="test-card-btn" id="monthABtn" type="button">
+      <div class="test-title">A달</div>
+      <div class="test-desc">초급 보카 회화 테스트 · 의문사 영작 · Be동사 문장 연습</div>
+    </button>
+    <button class="test-card-btn" id="monthBBtn" type="button">
+      <div class="test-title">B달</div>
+      <div class="test-desc">초급 보카 회화 테스트 · 수업 문장</div>
+    </button>
+  </div>
+
+  <div class="card" id="screenTestsA" style="display:none;">
+    <button class="btn-secondary back-btn" id="backFromA" type="button">← 처음으로</button>
+    <div class="prompt-label">A달 · 테스트 선택</div>
+    <button class="test-card-btn" id="testVocabBtn" type="button">
+      <div class="test-title">초급 보카 회화 테스트</div>
+      <div class="test-desc">집 · 잠 · 만남 · 여행 · 육아 실생활 표현 103문제</div>
+    </button>
+    <button class="test-card-btn" id="testWhBtn" type="button">
+      <div class="test-title">의문사 영작 테스트</div>
+      <div class="test-desc">Who / What / Where / When / Why / How 질문 236문제</div>
+    </button>
+    <button class="test-card-btn" id="testBeverbBtn" type="button">
+      <div class="test-title">Be동사 문장 연습</div>
+      <div class="test-desc">기본 be동사 문장 80문제</div>
+    </button>
+  </div>
+
+  <div class="card" id="screenTestsB" style="display:none;">
+    <button class="btn-secondary back-btn" id="backFromB" type="button">← 처음으로</button>
+    <div class="prompt-label">B달 · 테스트 선택</div>
+    <button class="test-card-btn" id="testBVocabBtn" type="button">
+      <div class="test-title">초급 보카 회화 테스트</div>
+      <div class="test-desc">감정 · 음식 · 약속 · 날씨 · 줄임말 100문제</div>
+    </button>
+    <button class="test-card-btn" id="testLessonBtn" type="button">
+      <div class="test-title">수업 문장</div>
+      <div class="test-desc">1과 · 2과 · 3과 챕터별 / 전체 35문제</div>
+    </button>
+  </div>
+
+  <div class="card" id="screenCategoryB" style="display:none;">
+    <button class="btn-secondary back-btn" id="backFromCategoryB" type="button">← B달로</button>
+    <div class="prompt-label">B달 · 초급 보카 회화 테스트 · 카테고리 선택</div>
+    <button class="test-card-btn" id="catFeelingBtn" type="button">
+      <div class="test-title">감정</div>
+      <div class="test-desc">감정 표현 20문제</div>
+    </button>
+    <button class="test-card-btn" id="catFoodBtn" type="button">
+      <div class="test-title">음식</div>
+      <div class="test-desc">음식 표현 20문제</div>
+    </button>
+    <button class="test-card-btn" id="catPlansBtn" type="button">
+      <div class="test-title">약속</div>
+      <div class="test-desc">약속 표현 20문제</div>
+    </button>
+    <button class="test-card-btn" id="catWeatherBtn" type="button">
+      <div class="test-title">날씨</div>
+      <div class="test-desc">날씨 표현 20문제</div>
+    </button>
+    <button class="test-card-btn" id="catSnsBtn" type="button">
+      <div class="test-title">줄임말</div>
+      <div class="test-desc">SNS 줄임말 표현 20문제</div>
+    </button>
+    <button class="test-card-btn" id="catAllBtn" type="button">
+      <div class="test-title">전체 (All)</div>
+      <div class="test-desc">감정 · 음식 · 약속 · 날씨 · 줄임말 100문제</div>
+    </button>
+  </div>
+
+  <div class="card" id="screenLessonCategory" style="display:none;">
+    <button class="btn-secondary back-btn" id="backFromLessonCategory" type="button">← B달로</button>
+    <div class="prompt-label">B달 · 수업 문장 · 챕터 선택</div>
+    <button class="test-card-btn" id="lesson1Btn" type="button">
+      <div class="test-title">수업 1</div>
+      <div class="test-desc">1과 빈도부사 문장 12문제</div>
+    </button>
+    <button class="test-card-btn" id="lesson2Btn" type="button">
+      <div class="test-title">수업 2</div>
+      <div class="test-desc">2과 to/ing 문장 13문제</div>
+    </button>
+    <button class="test-card-btn" id="lesson3Btn" type="button">
+      <div class="test-title">수업 3</div>
+      <div class="test-desc">3과 to부정사 문장 10문제</div>
+    </button>
+    <button class="test-card-btn" id="lessonAllBtn" type="button">
+      <div class="test-title">전체 (All)</div>
+      <div class="test-desc">1~3과 전체 35문제</div>
+    </button>
+  </div>
+
+  <div class="home-link" id="homeLink">
+    <button class="btn-secondary" id="goHomeBtn" type="button">🏠 처음으로</button>
+  </div>
+
+  <div class="card" id="setupCard" style="display:none;">
+    <div class="prompt-label" id="setupTestLabel">문제 개수 선택</div>
+    <div class="setup-label">총 <span id="totalCount"></span>개 문제 중 몇 개를 풀어볼까요?</div>
+    <div class="count-options" id="countOptions"></div>
+    <button class="btn-primary" id="startBtn" style="width:100%;">시작하기</button>
+  </div>
+
+  <div class="meta-row" id="metaRow" style="display:none;">
+    <span id="progressText">문제 1 / 20</span>
+    <span id="scoreText">맞은 개수: 0</span>
+  </div>
+  <div class="progress-bar" id="progressBar" style="display:none;"><div class="progress-fill" id="progressFill"></div></div>
+
+  <div class="card" id="quizCard" style="display:none;">
+    <div class="prompt-label">다음 문장을 영어로 작문하세요</div>
+    <div class="prompt" id="promptText"></div>
+
+    <input type="text" id="answerInput" placeholder="영어로 입력하세요..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+
+    <div class="actions">
+      <button class="btn-secondary" id="skipBtn">건너뛰기</button>
+      <button class="btn-primary" id="checkBtn">채점하기</button>
+    </div>
+
+    <div class="feedback" id="feedback"></div>
+  </div>
+
+  <div class="card" id="summaryCard" style="display:none;">
+    <div class="summary">
+      <p>테스트 완료!</p>
+      <div class="score" id="finalScore">0 / 20</div>
+      <p id="finalMsg"></p>
+      <div class="actions">
+        <button class="btn-secondary" id="reviewWrongBtn" style="display:none;">틀린 문제만 다시 풀기</button>
+        <button class="btn-primary" id="restartBtn">다시 시작하기</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>Enter 키로 채점 / 다음 문제로 이동할 수 있어요</footer>
+</div>
+
+<script>
+const VOCAB_QUESTIONS = [
+  { kr: "나 오늘 집에 일찍 가야 해.", en: ["i have to go home early today"] },
+  { kr: "너 집에 도착했어?", en: ["did you get home"] },
+  { kr: "나 막 집에 도착했어.", en: ["i just got home"] },
+  { kr: "나 집에서 나가는 중이야.", en: ["i'm leaving home now"] },
+  { kr: "나 그냥 집에서 있었어.", en: ["i just stayed at home", "i just stayed home"] },
+  { kr: "난 항상 여기가 편하게 느껴져.", en: ["i always feel at home here"] },
+  { kr: "지난 주말에, 집 청소했어.", en: ["last weekend, i cleaned the house", "i cleaned the house last weekend"] },
+  { kr: "7시쯤이면 집에 있을 거야.", en: ["i'll be home around 7"] },
+  { kr: "나 지금 집 가는 길이야.", en: ["i'm on my way home now"] },
+  { kr: "오늘 밤엔 우리 집에 있을 거야.", en: ["we're going to stay in tonight", "we're gonna stay in tonight"] },
+  { kr: "나 가끔 재택근무해.", en: ["i sometimes work from home"] },
+  { kr: "어젯밤에 집에 늦게 들어왔어.", en: ["i got home late last night"] },
+  { kr: "지난 주말에 내 친구들이 집에 놀러왔어.", en: ["my friends came over last weekend"] },
+  { kr: "나 오늘 친구 집에 놀러갔어.", en: ["i went over to my friend's place today"] },
+  { kr: "아들 생일이라서 그의 친구들을 집에 초대했어.", en: ["we invited our son's friends over for his birthday"] },
+  { kr: "너 원하면 오늘 밤에 자고 가도 돼.", en: ["you can stay over tonight if you want"] },
+  { kr: "저희 지난달에 이사 왔어요.", en: ["we moved in last month"] },
+  { kr: "나 다음 주에 이사 나가.", en: ["i'm going to move out next week", "i'm gonna move out next week"] },
+  { kr: "나 이제 집에 갈게.", en: ["i'm going to head home now", "i'm gonna head home now"] },
+  { kr: "지갑을 두고 와서, 집에 다시 갔어.", en: ["i forgot my wallet, so i went back home"] },
+  { kr: "우리 에어비앤비에서 하룻밤 묵었어.", en: ["we spent the night at an airbnb"] },
+
+  { kr: "나 어젯밤에 늦게 잤어.", en: ["i went to bed late last night"] },
+  { kr: "나 거의 잠들 뻔했어.", en: ["i almost fell asleep"] },
+  { kr: "나 회의하다가 깜빡 졸았어.", en: ["i dozed off during the meeting"] },
+  { kr: "유튜브 보느라 늦게까지 안 잤어.", en: ["i stayed up late watching youtube"] },
+  { kr: "우리 술 마시면서 밤샜어.", en: ["we stayed up all night drinking"] },
+  { kr: "나 오늘 아침에 늦잠 잤어.", en: ["i overslept this morning"] },
+  { kr: "나 오늘 늦게 일어났어.", en: ["i got up late today"] },
+  { kr: "난 보통 7시에 일어나.", en: ["i usually get up at 7"] },
+  { kr: "수업 끝나고 낮잠 잤어.", en: ["i took a nap after class"] },
+  { kr: "너 아직 안 자?", en: ["are you still awake"] },
+  { kr: "아이들 벌써 자고 있어.", en: ["the kids are already asleep"] },
+  { kr: "잘 잤어?", en: ["did you sleep well"] },
+  { kr: "나 잘 잤어.", en: ["i slept well"] },
+  { kr: "요즘, 나 잠을 잘 못 자고 있어.", en: ["lately, i've been having trouble sleeping", "i've been having trouble sleeping lately"] },
+  { kr: "나 밤새 뒤척였어.", en: ["i tossed and turned all night"] },
+  { kr: "나 알람 맞추는 거 깜빡했어.", en: ["i forgot to set an alarm"] },
+  { kr: "일어났어?", en: ["are you up"] },
+  { kr: "나 일어났어.", en: ["i'm up"] },
+  { kr: "좀 자려고 해봐.", en: ["try to get some sleep"] },
+  { kr: "다시 잠이 안 왔어.", en: ["i couldn't go back to sleep"] },
+  { kr: "나 어제 악몽 꿨어.", en: ["i had a nightmare last night"] },
+  { kr: "7시에 나 좀 깨워줄 수 있어?", en: ["can you wake me up at 7"] },
+
+  { kr: "나 어제 친구들하고 놀았어.", en: ["i hung out with my friends yesterday"] },
+  { kr: "나 지난 주말에 친구들 만났어.", en: ["i met up with my friends last weekend"] },
+  { kr: "나 친구들과 약속 잡았어.", en: ["i made plans with my friends"] },
+  { kr: "나 그 날 직장 동료들과 약속 있어.", en: ["i have plans with my coworkers that day"] },
+  { kr: "우리 퇴근하고 술 한잔했어.", en: ["we grabbed a drink after work"] },
+  { kr: "오늘 저녁 먹을래?", en: ["do you want to grab dinner tonight", "do you wanna grab dinner tonight"] },
+  { kr: "나 어젯밤에 친구들이랑 놀러 나갔어.", en: ["i went out with my friends last night"] },
+  { kr: "나 남편하고 저녁 먹으러 나갔어.", en: ["i went out for dinner with my husband"] },
+  { kr: "난 금요일 괜찮아.", en: ["friday works for me"] },
+  { kr: "우리 한남동에 있는 전시회 보러 갔어.", en: ["we went to see an exhibition in hannam-dong"] },
+  { kr: "어젯밤에 너무 재밌었어!", en: ["i had so much fun last night"] },
+  { kr: "우리 같이 즐거운 시간 보냈어.", en: ["we had a great time together"] },
+  { kr: "우리 카페에서 몇 시간 동안 떠들었어.", en: ["we talked for hours at the cafe"] },
+  { kr: "우리 한 시간 동안 통화했어.", en: ["we talked on the phone for an hour"] },
+  { kr: "언제 커피 한잔하러 만나자!", en: ["let's meet for coffee sometime"] },
+  { kr: "내 오랜 친구들과 모였어.", en: ["i got together with my old friends"] },
+  { kr: "우리 조만간 얘기하자!", en: ["let's catch up soon"] },
+  { kr: "우리 카페에서 시간 가는 줄을 몰랐어.", en: ["we lost track of time at the cafe"] },
+  { kr: "우리 일이랑 뭐 그런 거 얘기했어.", en: ["we talked about work and stuff"] },
+  { kr: "내 친구는 항상 남 얘기를 해.", en: ["my friend always gossips about other people"] },
+
+  { kr: "우리 다음주에 여행가.", en: ["we're going on a trip next week", "we're gonna go on a trip next week"] },
+  { kr: "나 다음달에 태국 가.", en: ["i'm going to thailand next month"] },
+  { kr: "나 작년에 스페인 갔었어.", en: ["i went to spain last year"] },
+  { kr: "나 올해는 정말 해외여행 가고 싶어.", en: ["i really want to travel abroad this year"] },
+  { kr: "나 혼자 여행해본 적 한 번도 없어.", en: ["i've never traveled alone before"] },
+  { kr: "나 출장에 가야 해.", en: ["i have to go on a business trip"] },
+  { kr: "그거 즉흥 여행이었어.", en: ["it was a last-minute trip"] },
+  { kr: "20대 때 유럽에서 배낭여행 했어.", en: ["i went backpacking in europe in my twenties"] },
+  { kr: "나 속초로 당일치기 여행 갔다 왔어.", en: ["i took a day trip to sokcho"] },
+  { kr: "우리 파리에서 길 잃었어.", en: ["we got lost in paris"] },
+  { kr: "난 현지음식을 먹어보고 싶어.", en: ["i want to try the local food", "i wanna try the local food"] },
+  { kr: "휴가 어디가?", en: ["where are you going for your vacation"] },
+  { kr: "우리는 거기 삼일동안 있었어.", en: ["we stayed there for three days"] },
+  { kr: "거기 꼭 가볼게!", en: ["i'll definitely check it out"] },
+  { kr: "추천 감사드려요.", en: ["thanks for the recommendation"] },
+  { kr: "내가 알아볼게.", en: ["let me look it up"] },
+  { kr: "거기 가족하고 같이 갔어.", en: ["i went there with my family"] },
+  { kr: "일본 여행은 어땠어?", en: ["how was your trip to japan"] },
+  { kr: "나 기념품 많이 샀어.", en: ["i bought a lot of souvenirs"] },
+  { kr: "여행 일정이 어떻게 돼?", en: ["what's your itinerary"] },
+
+  { kr: "아이들 도시락을 싸야 해.", en: ["i have to pack my kids' lunches"] },
+  { kr: "학교에서 아이들 데려왔어.", en: ["i picked up my kids from school"] },
+  { kr: "아들 어린이집에 데려다 줬어.", en: ["i dropped my son off at daycare"] },
+  { kr: "나만의 시간이 필요해.", en: ["i need some me-time"] },
+  { kr: "우리 아들 친구들을 집에 초대했어.", en: ["we invited our son's friends over"] },
+  { kr: "난 매일 아침 아침밥을 해.", en: ["i make breakfast every morning"] },
+  { kr: "방금 아이들 밥 먹이는 거 끝냈어.", en: ["i just finished feeding the kids"] },
+  { kr: "아이들이 오늘 집을 엄청 어질러 놨어.", en: ["my kids made a huge mess today"] },
+  { kr: "오늘 딸을 병원에 데려갔어.", en: ["i took my daughter to the doctor today"] },
+  { kr: "오늘 아이를 집에 일찍 데려왔어.", en: ["i brought my kid home early today"] },
+  { kr: "애 좀 지켜봐 줄 수 있어?", en: ["can you keep an eye on her"] },
+  { kr: "오늘은 애들 아빠가 아이들 봐주고 있어.", en: ["my husband is watching the kids today"] },
+  { kr: "학교 행사에 가야 해.", en: ["i have to go to a school event"] },
+  { kr: "내일 학부모 상담이 있어.", en: ["i have a parent-teacher conference tomorrow"] },
+  { kr: "오후 내내 아이들과 놀아줬어.", en: ["i played with the kids all afternoon"] },
+  { kr: "내일 현장학습이 있어.", en: ["there's a field trip tomorrow"] },
+  { kr: "그는 오늘 방과 후 수업이 있어.", en: ["he has an after-school program today"] },
+  { kr: "난 9시쯤 애들을 재워.", en: ["i put the kids to bed around 9"] },
+  { kr: "나 딸 숙제 봐줬어.", en: ["i helped my daughter with her homework"] },
+  { kr: "하루 종일 애들 여기저기 데려다 주느라 바빴어.", en: ["i was busy driving the kids around all day"] },
+];
+
+const WH_QUESTIONS = [
+  { kr: "너 누구랑 같이 점심 먹었어?", en: ["who did you have lunch with", "who did you eat lunch with"] },
+  { kr: "너 보통 누구랑 같이 점심 먹어?", en: ["who do you usually have lunch with", "who do you usually eat lunch with"] },
+  { kr: "너 지금 누구 기다리고 있어?", en: ["who are you waiting for right now", "who are you waiting for now"] },
+  { kr: "너 누구한테 전화했어?", en: ["who did you call"] },
+  { kr: "너 누구랑 같이 살고 있어?", en: ["who do you live with"] },
+  { kr: "너 이거 누구한테 배웠어?", en: ["who did you learn this from"] },
+  { kr: "너 누구랑 여행 갔어?", en: ["who did you travel with"] },
+  { kr: "어제 누구랑 같이 있었어?", en: ["who were you with yesterday"] },
+  { kr: "저 사람 누구야?", en: ["who is that person", "who's that person", "who is that guy"] },
+  { kr: "누구랑 얘기하고 있어?", en: ["who are you talking to"] },
+  { kr: "파티에 누구누구 올 거야?", en: ["who all is coming to the party", "who's coming to the party"] },
+  { kr: "이 가방 누구 거야?", en: ["whose bag is this"] },
+  { kr: "누구한테 이 소식 들었어?", en: ["who did you hear this news from", "who did you hear the news from"] },
+  { kr: "너 누구랑 닮았어?", en: ["who do you look like"] },
+  { kr: "누가 너한테 그거 말해줬어?", en: ["who told you that"] },
+  { kr: "너 누구랑 쇼핑 가는 거 좋아해?", en: ["who do you like going shopping with", "who do you like to go shopping with"] },
+  { kr: "너 누구랑 제일 친해?", en: ["who are you closest with", "who are you closest to"] },
+  { kr: "어제 누구랑 통화했어?", en: ["who did you talk to on the phone yesterday", "who did you call yesterday"] },
+  { kr: "이번 주말에 누구 만날 거야?", en: ["who are you going to meet this weekend", "who are you meeting this weekend"] },
+  { kr: "누구랑 같이 일하고 싶어?", en: ["who do you want to work with"] },
+  { kr: "이 사진 속에 있는 사람 누구야?", en: ["who is the person in this picture", "who's the person in this picture"] },
+  { kr: "누가 이거 고쳤어?", en: ["who fixed this"] },
+  { kr: "누구한테 빌린 거야?", en: ["who did you borrow it from", "who did you borrow this from"] },
+  { kr: "어제 누가 왔었어?", en: ["who came yesterday"] },
+  { kr: "너 누구 믿어?", en: ["who do you trust"] },
+
+  { kr: "너 지금 뭐 보고 있어?", en: ["what are you watching right now", "what are you watching now"] },
+  { kr: "어떤 종류의 음악 좋아해?", en: ["what kind of music do you like"] },
+  { kr: "너 오늘 저녁 뭐 먹을 거야?", en: ["what are you going to eat for dinner today", "what are you eating for dinner today"] },
+  { kr: "너 주말에 뭐 했어?", en: ["what did you do over the weekend", "what did you do this weekend"] },
+  { kr: "너 지금 뭐 하고 싶어?", en: ["what do you want to do right now", "what do you want to do now"] },
+  { kr: "너 오늘 밤에 뭐 할 거야?", en: ["what are you going to do tonight"] },
+  { kr: "너 요즘 뭐 하고 지내?", en: ["what have you been up to these days", "what have you been up to lately"] },
+  { kr: "너 오늘 뭐 먹었어?", en: ["what did you eat today"] },
+  { kr: "너 지금 뭐 생각하고 있어?", en: ["what are you thinking about right now", "what are you thinking about now"] },
+  { kr: "너 어떤 음식 좋아해?", en: ["what kind of food do you like"] },
+  { kr: "너 지금 뭐 하고 있었어?", en: ["what were you doing"] },
+  { kr: "너 어떤 종류의 영화를 좋아해?", en: ["what kind of movies do you like"] },
+  { kr: "취미가 뭐야?", en: ["what is your hobby", "what's your hobby"] },
+  { kr: "어제 무슨 일 있었어?", en: ["what happened yesterday"] },
+  { kr: "무슨 문제 있어?", en: ["what's the problem", "what is the problem", "is something wrong"] },
+  { kr: "직업이 뭐야? (뭐 하는 분이야?)", en: ["what do you do for a living", "what's your job"] },
+  { kr: "제일 좋아하는 색깔이 뭐야?", en: ["what is your favorite color", "what's your favorite color"] },
+  { kr: "가방 안에 뭐 들어있어?", en: ["what's in your bag", "what is in your bag"] },
+  { kr: "너 뭐라고 했어?", en: ["what did you say"] },
+  { kr: "이거 무슨 뜻이야?", en: ["what does this mean"] },
+  { kr: "너 생일 선물로 뭐 받고 싶어?", en: ["what do you want for your birthday present", "what do you want for your birthday gift"] },
+  { kr: "너 오늘 뭐 입을 거야?", en: ["what are you going to wear today"] },
+  { kr: "어제 쇼핑 가서 뭐 샀어?", en: ["what did you buy when you went shopping yesterday", "what did you buy yesterday when you went shopping"] },
+  { kr: "가장 좋아하는 한국 음식이 뭐야?", en: ["what is your favorite korean food", "what's your favorite korean food"] },
+  { kr: "너 어제 TV에서 뭐 봤어?", en: ["what did you watch on tv yesterday"] },
+
+  { kr: "이거 어디서 살 수 있어?", en: ["where can i buy this"] },
+  { kr: "우리 어디서 만나는 게 좋을까?", en: ["where should we meet", "where would be a good place for you to meet", "where would be convenient for you to meet"] },
+  { kr: "너 보통 어디서 점심 먹어?", en: ["where do you usually eat lunch", "where do you usually have lunch"] },
+  { kr: "너 지금 어디 가는 중이야?", en: ["where are you going right now", "where are you going now"] },
+  { kr: "너 어디서 만나는 게 편해?", en: ["where is it convenient for you to meet", "where's convenient for you to meet"] },
+  { kr: "너 지금 어디 있는 거야?", en: ["where are you right now", "where are you now"] },
+  { kr: "너 어디 살아?", en: ["where do you live"] },
+  { kr: "너 이거 어디서 배웠어?", en: ["where did you learn this"] },
+  { kr: "화장실 어디야?", en: ["where is the bathroom", "where's the bathroom"] },
+  { kr: "리모컨 어디 뒀어?", en: ["where did you put the remote"] },
+  { kr: "너 어디서 태어났어?", en: ["where were you born"] },
+  { kr: "휴가 때 어디 갈 거야?", en: ["where are you going for vacation", "where are you going on vacation"] },
+  { kr: "우리 점심 어디서 먹을까?", en: ["where should we eat lunch", "where should we have lunch"] },
+  { kr: "너 어제 어디 갔었어?", en: ["where did you go yesterday"] },
+  { kr: "너 이 근처 어디 살아?", en: ["where around here do you live", "where do you live around here", "where do you live near here"] },
+  { kr: "이 근처에 맛집 어디 있어?", en: ["where is a good restaurant around here", "where's a good restaurant around here"] },
+  { kr: "차 어디에 주차했어?", en: ["where did you park the car", "where did you park"] },
+  { kr: "너 어디 아파?", en: ["where does it hurt"] },
+  { kr: "신분증 어디 있어?", en: ["where is your id", "where's your id"] },
+  { kr: "역까지 어떻게 가는지 알아?", en: ["do you know how to get to the station"] },
+  { kr: "너 어디서 내릴 거야?", en: ["where are you getting off"] },
+  { kr: "너 부모님 어디 계셔?", en: ["where are your parents"] },
+  { kr: "너 가방 어디서 났어? (어디서 샀어?)", en: ["where did you get this bag", "where did you buy this bag"] },
+  { kr: "우리 어디서 헤어질까?", en: ["where should we part ways", "where should we say goodbye"] },
+  { kr: "너 어디에 취직했어?", en: ["where did you get a job", "where do you work now"] },
+
+  { kr: "너 언제 집에 도착했어?", en: ["when did you get home"] },
+  { kr: "너 언제 만날 수 있어?", en: ["when can you meet"] },
+  { kr: "너 몇 시에 일어나?", en: ["what time do you wake up"] },
+  { kr: "너 마지막으로 여행 간 게 언제야?", en: ["when was the last time you traveled"] },
+  { kr: "너 보통 몇 시에 자?", en: ["what time do you usually go to bed", "what time do you usually sleep"] },
+  { kr: "너 언제 이사했어?", en: ["when did you move"] },
+  { kr: "너 언제 시간 돼?", en: ["when are you free"] },
+  { kr: "너 언제 다시 올 거야?", en: ["when are you coming back"] },
+  { kr: "너 언제부터 영어 공부했어?", en: ["when did you start studying english", "since when have you studied english"] },
+  { kr: "너 언제 다시 일 시작해?", en: ["when are you starting work again", "when do you start work again"] },
+  { kr: "너 보통 몇 시에 출근해?", en: ["what time do you usually go to work"] },
+  { kr: "우리 몇 시에 만날까?", en: ["what time should we meet"] },
+  { kr: "너 생일이 언제야?", en: ["when is your birthday", "when's your birthday"] },
+  { kr: "그 영화 언제 시작해?", en: ["when does the movie start"] },
+  { kr: "너 언제 퇴근해?", en: ["when do you get off work", "what time do you get off work"] },
+  { kr: "은행 언제 닫아?", en: ["when does the bank close"] },
+  { kr: "너 언제부터 여기 살았어?", en: ["since when have you lived here", "when did you start living here"] },
+  { kr: "우리 언제 밥 한번 먹을까?", en: ["when should we get a meal together", "when should we grab a meal together"] },
+  { kr: "너 어제 몇 시에 들어왔어?", en: ["what time did you come home yesterday", "what time did you get home yesterday"] },
+  { kr: "너 이거 언제 다 할 거야?", en: ["when are you going to finish this"] },
+  { kr: "너 언제 한국에 왔어?", en: ["when did you come to korea"] },
+  { kr: "너 언제 결정할 거야?", en: ["when are you going to decide"] },
+  { kr: "회의가 몇 시야?", en: ["what time is the meeting"] },
+  { kr: "너 언제 쉴 수 있어?", en: ["when can you rest"] },
+  { kr: "너 언제 결혼해?", en: ["when are you getting married"] },
+
+  { kr: "너 왜 나한테 말 안 했어?", en: ["why didn't you tell me"] },
+  { kr: "너 왜 그렇게 늦었어?", en: ["why are you so late"] },
+  { kr: "너 오늘 왜 늦게 왔어?", en: ["why did you come late today", "why were you late today"] },
+  { kr: "너 왜 그렇게 웃고 있어?", en: ["why are you smiling like that"] },
+  { kr: "너 왜 나한테 전화했어?", en: ["why did you call me"] },
+  { kr: "너 왜 그렇게 화났어?", en: ["why are you so angry", "why are you so mad"] },
+  { kr: "너 그거 왜 샀어?", en: ["why did you buy that"] },
+  { kr: "너 왜 그렇게 조용해?", en: ["why are you so quiet"] },
+  { kr: "너 왜 안 먹어?", en: ["why aren't you eating"] },
+  { kr: "너 왜 울고 있어?", en: ["why are you crying"] },
+  { kr: "너 왜 그거 안 했어?", en: ["why didn't you do that", "why didn't you do it"] },
+  { kr: "너 왜 공부 안 해?", en: ["why aren't you studying"] },
+  { kr: "너 왜 여기 있어?", en: ["why are you here"] },
+  { kr: "왜 그렇게 생각해?", en: ["why do you think that", "why do you think so"] },
+  { kr: "너 왜 학교 안 갔어?", en: ["why didn't you go to school"] },
+  { kr: "왜 나한테 거짓말했어?", en: ["why did you lie to me"] },
+  { kr: "왜 이 식당이 유명해?", en: ["why is this restaurant famous"] },
+  { kr: "왜 갑자기 마음을 바꿨어?", en: ["why did you suddenly change your mind"] },
+  { kr: "왜 나한테 화풀이야?", en: ["why are you taking it out on me"] },
+  { kr: "왜 그렇게 서둘러?", en: ["why are you in such a hurry", "why are you rushing so much", "why are you in such a rush"] },
+  { kr: "왜 일찍 가려고 해?", en: ["why are you trying to leave early"] },
+  { kr: "왜 그 사람이랑 헤어졌어?", en: ["why did you break up with him", "why did you break up with her"] },
+  { kr: "왜 나한테 안 물어봤어?", en: ["why didn't you ask me"] },
+  { kr: "왜 어제 안 왔어?", en: ["why didn't you come yesterday"] },
+  { kr: "왜 그렇게 슬퍼 보여?", en: ["why do you look so sad"] },
+
+  { kr: "너 여기 어떻게 왔어?", en: ["how did you get here"] },
+  { kr: "그 영화 어땠어?", en: ["how was the movie"] },
+  { kr: "이거 어떻게 사용하는 거야?", en: ["how do you use this"] },
+  { kr: "너 오늘 하루 어땠어?", en: ["how was your day", "how was your day today"] },
+  { kr: "너 이거 어떻게 알았어?", en: ["how did you know this", "how did you know that"] },
+  { kr: "너 이번 여행 어땠어?", en: ["how was your trip", "how was this trip"] },
+  { kr: "너 이거 얼마나 비싸게 샀어?", en: ["how much did you pay for this", "how expensive was this when you bought it"] },
+  { kr: "스테이크 어떻게 익혀드릴까요?", en: ["how would you like your steak cooked", "how do you want your steak cooked"] },
+  { kr: "회사 분위기 어때?", en: ["how is the atmosphere at work", "how's the atmosphere at work", "what's the atmosphere like at work"] },
+  { kr: "새 집 어때?", en: ["how is your new house", "how's your new house"] },
+  { kr: "너 이거 혼자 어떻게 했어?", en: ["how did you do this by yourself", "how did you do this alone"] },
+  { kr: "내일 날씨 어떨까?", en: ["how will the weather be tomorrow", "what will the weather be like tomorrow"] },
+  { kr: "우리 저녁 뭐 먹지? (어떻게 할까?)", en: ["what should we eat for dinner", "what should we have for dinner"] },
+  { kr: "이거 맛이 어때?", en: ["how does this taste", "how does it taste"] },
+  { kr: "너 기분 어때?", en: ["how do you feel", "how are you feeling"] },
+  { kr: "그 사람 어때 보여?", en: ["how does he look", "how does she look"] },
+  { kr: "너 어떻게 생각해?", en: ["what do you think"] },
+  { kr: "너 이거 어떻게 만들었어?", en: ["how did you make this"] },
+  { kr: "너 어떻게 그 사람을 잊었어?", en: ["how did you forget him", "how did you forget her"] },
+  { kr: "시험 공부 어떻게 하고 있어?", en: ["how are you studying for the exam"] },
+  { kr: "너 다리 어쩌다 다쳤어?", en: ["how did you hurt your leg"] },
+  { kr: "그거 어떻게 고쳐야 해?", en: ["how should i fix that", "how should this be fixed"] },
+  { kr: "너 이거 얼마나 무거워?", en: ["how heavy is this", "how heavy is it"] },
+  { kr: "너 키가 몇이야?", en: ["how tall are you"] },
+  { kr: "너 몸무게 얼마야?", en: ["how much do you weigh"] },
+
+  { kr: "너 얼마나 자주 운동해?", en: ["how often do you exercise", "how often do you work out"] },
+  { kr: "너 그 사람을 얼마나 자주 만나?", en: ["how often do you meet him", "how often do you meet her"] },
+  { kr: "너 여기 얼마나 자주 와?", en: ["how often do you come here"] },
+  { kr: "너 얼마나 자주 가족을 만나?", en: ["how often do you see your family", "how often do you meet your family"] },
+  { kr: "너 얼마나 자주 외식해?", en: ["how often do you eat out"] },
+  { kr: "너 얼마나 오래 기다렸어?", en: ["how long did you wait"] },
+  { kr: "너 여기 얼마나 오래 살았어?", en: ["how long have you lived here"] },
+  { kr: "너 얼마나 기다려야 해?", en: ["how long do i have to wait"] },
+  { kr: "너 이거 얼마나 오래 가지고 있었어?", en: ["how long have you had this"] },
+  { kr: "너 얼마나 오래 일했어? (오늘)", en: ["how long did you work today"] },
+  { kr: "너 얼마나 오래 기다리고 있었어?", en: ["how long have you been waiting"] },
+  { kr: "너 얼마나 걸려서 회사에 가?", en: ["how long does it take you to get to work", "how long does it take you to get to the office"] },
+  { kr: "너 얼마나 걸려서 거기 도착했어?", en: ["how long did it take you to get there"] },
+  { kr: "거기 가는데 얼마나 걸려?", en: ["how long does it take to get there"] },
+  { kr: "이거 다 하는데 얼마나 걸려?", en: ["how long does it take to finish all of this", "how long does it take to finish this"] },
+  { kr: "너 잠 얼마나 잤어?", en: ["how long did you sleep"] },
+  { kr: "너 커피 얼마나 자주 마셔?", en: ["how often do you drink coffee"] },
+  { kr: "너 TV 얼마나 자주 봐?", en: ["how often do you watch tv"] },
+  { kr: "너 책 얼마나 자주 읽어?", en: ["how often do you read books"] },
+  { kr: "너 한 달에 몇 번 여행 가?", en: ["how many times a month do you travel"] },
+  { kr: "이거 얼마예요?", en: ["how much is this"] },
+  { kr: "너 돈 얼마나 있어?", en: ["how much money do you have"] },
+  { kr: "너 어제 술 얼마나 마셨어?", en: ["how much did you drink yesterday"] },
+  { kr: "그 영화 얼마나 길어?", en: ["how long is the movie"] },
+  { kr: "너 일주일에 몇 번 장 봐?", en: ["how many times a week do you go grocery shopping", "how often do you go grocery shopping"] },
+
+  { kr: "너 거기 가본 적 있어?", en: ["have you ever been there"] },
+  { kr: "너 이거 주문할 거야?", en: ["are you going to order this"] },
+  { kr: "너 커피 마실래?", en: ["would you like some coffee", "do you want some coffee"] },
+  { kr: "너 나랑 같이 갈 거야?", en: ["are you going to go with me", "are you going with me"] },
+  { kr: "너 요즘 바빠?", en: ["are you busy these days"] },
+  { kr: "너 저녁 먹고 싶어?", en: ["do you want to eat dinner", "do you want to have dinner"] },
+  { kr: "너 나 도와줄 수 있어?", en: ["can you help me"] },
+  { kr: "너 이 영화 볼 만해?", en: ["is this movie worth watching"] },
+  { kr: "너 나랑 같이 저녁 먹을래?", en: ["do you want to have dinner with me", "do you want to eat dinner with me"] },
+  { kr: "너 이 근처에 살아?", en: ["do you live around here"] },
+  { kr: "너 오늘 저녁에 시간 있어?", en: ["do you have time this evening", "do you have time tonight"] },
+  { kr: "너 내일 나랑 같이 갈 수 있어?", en: ["can you go with me tomorrow"] },
+  { kr: "너 이거 해볼래?", en: ["do you want to try this"] },
+  { kr: "너 나중에 연락할 수 있어?", en: ["can you contact me later", "can you get back to me later"] },
+  { kr: "너 이 식당 가본 적 있어?", en: ["have you been to this restaurant"] },
+  { kr: "너 운전할 줄 알아?", en: ["can you drive", "do you know how to drive"] },
+  { kr: "너 매운 거 잘 먹어?", en: ["are you good with spicy food", "can you eat spicy food well"] },
+  { kr: "너 나한테 화났어?", en: ["are you angry at me", "are you mad at me"] },
+  { kr: "너 피곤해 보여.", en: ["you look tired"] },
+  { kr: "너 어제 잠 잘 잤어?", en: ["did you sleep well last night"] },
+  { kr: "너 숙제 다 했어?", en: ["did you finish your homework"] },
+  { kr: "너 이거 할 수 있어?", en: ["can you do this"] },
+  { kr: "너 벌써 먹었어?", en: ["have you already eaten"] },
+  { kr: "너 무슨 생각 해?", en: ["what are you thinking"] },
+  { kr: "너 준비됐어?", en: ["are you ready"] },
+
+  { kr: "카페 몇 시에 닫아?", en: ["what time does the cafe close"] },
+  { kr: "그 카페 9시에 닫아.", en: ["that cafe closes at 9", "the cafe closes at 9"] },
+  { kr: "그 식당 몇 시에 열어?", en: ["what time does the restaurant open"] },
+  { kr: "나는 그 식당이 10시에 여는 것 같아.", en: ["i think that restaurant opens at 10"] },
+  { kr: "너 카페 몇 시에 여는지 알아?", en: ["do you know what time the cafe opens"] },
+  { kr: "너 식당 몇 시에 닫는지 알아?", en: ["do you know what time the restaurant closes"] },
+  { kr: "너 그 카페 지금 열었을 것 같아?", en: ["do you think that cafe is open right now"] },
+  { kr: "너 그 카페 닫았을 것 같아?", en: ["do you think that cafe is closed"] },
+  { kr: "카페 벌써 열었어?", en: ["is the cafe open yet"] },
+  { kr: "그 식당 벌써 열었어?", en: ["is that restaurant open yet"] },
+  { kr: "지금쯤이면 열었을 거야.", en: ["they should be open by now"] },
+  { kr: "나 보통 별일 없으면 6시쯤 퇴근해.", en: ["i get off work around 6 every day if everything goes smoothly"] },
+  { kr: "나 2시에 퇴근해.", en: ["i'm getting off work at 2"] },
+  { kr: "너 몇 시에 만나고 싶어?", en: ["when do you wanna meet", "what time do you wanna meet", "what time is convenient for you to meet"] },
+  { kr: "그거 좀 지루해.", en: ["it's a bit boring"] },
+  { kr: "그거 좀 지루했어.", en: ["it was a bit boring"] },
+  { kr: "그거 꽤 괜찮아.", en: ["it's pretty good"] },
+  { kr: "그거 나름 괜찮아.", en: ["it's kind of decent"] },
+  { kr: "그거 한 시간이나 기다릴 가치는 없어.", en: ["it's not worth waiting an hour for"] },
+  { kr: "그거 꼭 가볼 만해!", en: ["it's definitely worth checking out"] },
+  { kr: "완전 가볼 만해.", en: ["it's definitely worth it"] },
+  { kr: "나 거기 또 가고 싶어.", en: ["i wanna go there again"] },
+  { kr: "주말 어땠어?", en: ["how was your weekend"] },
+  { kr: "너 거기 갈 거야?", en: ["are you going there", "are you gonna go there"] },
+  { kr: "너 이제 자러 가?", en: ["are you going to bed now"] },
+  { kr: "너 이거 먹을 거야?", en: ["are you gonna eat this"] },
+  { kr: "나랑 같이 놀래?", en: ["do you wanna hang out with me"] },
+  { kr: "너 이번 주말에 시간 있어?", en: ["are you free this weekend"] },
+  { kr: "토요일 말고 일요일은 괜찮아.", en: ["not saturday, but sunday is okay", "not saturday but sunday is okay"] },
+  { kr: "나랑 같이 쇼핑 갈래?", en: ["do you wanna go shopping with me"] },
+  { kr: "저녁으로 파스타 먹을래?", en: ["do you wanna have pasta for dinner"] },
+  { kr: "너 무슨 음식 먹고 싶어?", en: ["what kind of food do you wanna eat"] },
+  { kr: "너희 뭐 먹고 싶어?", en: ["what are you guys in the mood for"] },
+  { kr: "너 뭐 먹고 싶어?", en: ["what are you in the mood for"] },
+  { kr: "너 무슨 운동해?", en: ["what kind of workout do you do"] },
+  { kr: "너 일주일에 몇 번 운동해?", en: ["how many times a week do you work out"] },
+
+  { kr: "너 언제 저녁 먹을 거야?", en: ["when are you having dinner"] },
+  { kr: "너 저녁으로 뭐 먹을 거야?", en: ["what are you having for dinner"] },
+  { kr: "저녁 누구랑 같이 먹어?", en: ["who are you having dinner with"] },
+  { kr: "저녁 누구랑 같이 먹는 게 좋아?", en: ["who do you like having dinner with"] },
+  { kr: "저녁 누구랑 같이 먹고 싶어?", en: ["who do you want to have dinner with"] },
+  { kr: "저녁 안 먹을 거야?", en: ["aren't you having dinner", "are you not having dinner tonight"] },
+  { kr: "밥 언제 먹을래?", en: ["when should we get a meal", "when do you want to eat"] },
+  { kr: "저녁 어디서 먹는 게 좋을까?", en: ["where should we have dinner"] },
+  { kr: "저녁 해먹을 거야?", en: ["are you gonna make dinner"] },
+  { kr: "저녁 밖에서 먹을 거야?", en: ["are you eating out tonight"] },
+
+  { kr: "너 누구랑 친해?", en: ["who are you close to"] },
+  { kr: "누가 너랑 친해?", en: ["who is close to you", "who are you closest to"] },
+  { kr: "너 누구랑 친해지고 싶어?", en: ["who do you wanna get closer to"] },
+  { kr: "너 누구랑 친해질 거야?", en: ["who are you gonna get closer to"] },
+  { kr: "너 누구랑 이야기할 때 제일 좋니?", en: ["who do you like talking to the most"] },
+  { kr: "너 누구랑 놀 때가 가장 좋니?", en: ["who do you like hanging out with the most"] },
+  { kr: "누구랑 놀러 갈 거니?", en: ["who are you gonna hang out with"] },
+  { kr: "나 제니랑 친해.", en: ["i'm close to jenny"] },
+
+  { kr: "너는 어떤 사람이랑 사귀고 싶어?", en: ["what kind of person do you wanna be in a relationship with"] },
+  { kr: "너는 어떤 사람이랑 데이트하고 싶어?", en: ["what kind of person do you wanna go on a date with"] },
+  { kr: "너는 어떤 사람 좋아해?", en: ["what kind of person do you like"] },
+  { kr: "너 오늘 누구랑 데이트해?", en: ["who are you going on a date with today"] },
+  { kr: "너 오늘 데이트해?", en: ["are you going on a date today"] },
+  { kr: "너 누구랑 사귀어?", en: ["who are you dating"] },
+  { kr: "나 제니랑 사귀어.", en: ["i'm dating jenny"] },
+  { kr: "얼마나 만났어?", en: ["how long have you guys been together"] },
+  { kr: "너 오늘 밤에 뭐 할 계획이니?", en: ["what are you gonna do tonight"] },
+  { kr: "뭐 없어.", en: ["not much", "nothing much"] },
+
+  { kr: "너 한 달에 돈 얼마 저축하니?", en: ["how much money do you put aside every month", "how much money do you save every month"] },
+
+  { kr: "왜 그런 결정을 했어?", en: ["what made you make that decision"] },
+  { kr: "왜 선생님이 되기로 결정했어?", en: ["what made you become a teacher"] },
+  { kr: "왜 그렇게 생각하게 됐어?", en: ["what made you think that way"] },
+  { kr: "너를 그렇게 열정적으로 살게 만드는 게 뭐야?", en: ["what makes you so passionate about life"] },
+  { kr: "너를 운동에 그렇게 열정적으로 만드는 게 뭐야?", en: ["what makes you so passionate about working out"] },
+  { kr: "너 왜 그렇게 행복해 보여?", en: ["what makes you look so happy"] },
+
+  { kr: "나 다음 주에 집들이해.", en: ["i'm having a housewarming party next weekend"] },
+  { kr: "나 다음 주에 파티 열어.", en: ["i'm having a party next week"] },
+  { kr: "나 한국 파티 열 거야.", en: ["i'm gonna have a korean party"] },
+  { kr: "언제 파티 열어?", en: ["when is the party"] },
+  { kr: "너 시간 되면 올래?", en: ["if you're not too busy, would you like to come"] },
+  { kr: "너 파티에 올 거지?", en: ["you're gonna come to the party, right"] },
+  { kr: "누구누구 잭 파티에 가?", en: ["who is going to jack's party"] },
+  { kr: "누구누구 내 파티에 와?", en: ["who is coming to my party"] },
+  { kr: "누구 초대할 거야?", en: ["who are you gonna invite"] },
+  { kr: "누구 초대했어?", en: ["who did you invite"] },
+  { kr: "저스틴 온대?", en: ["is justin coming to the party"] },
+  { kr: "저스틴 안 올 것 같은데.", en: ["i don't think he'll make it"] },
+  { kr: "누가 파티에 왔어?", en: ["who came to the party"] },
+
+  { kr: "어디로 가?", en: ["where are you going"] },
+  { kr: "언제 가?", en: ["when are you going"] },
+  { kr: "너 미국 언제 가?", en: ["when are you going to the us"] },
+  { kr: "너 누구랑 여행 가?", en: ["who are you going on a trip with"] },
+  { kr: "너 누구랑 여행 가고 싶어?", en: ["who do you want to go on a trip with"] },
+  { kr: "너 어떤 사람이랑 여행 가고 싶어?", en: ["what kind of person do you wanna travel with"] },
+  { kr: "너 어디로 여행 가고 싶어? 시간이 있으면.", en: ["if you had the chance, where would you wanna go"] },
+  { kr: "너는 어느 여행지가 제일 좋았어?", en: ["what is the best travel destination you've been to"] },
+  { kr: "난 이탈리아가 제일 좋았어.", en: ["italy is my favorite travel destination"] },
+  { kr: "너는 도심을 좋아해, 휴양을 좋아해?", en: ["do you prefer city trips or relaxing vacations"] },
+
+  { kr: "엄청 오래 걸렸어.", en: ["it took me forever"] },
+  { kr: "너는 한국에서 제일 좋았던 경험이 뭐야?", en: ["what was your best experience in korea"] },
+  { kr: "내가 뭘 해야 하는지 알아?", en: ["do you know what i should do"] },
+  { kr: "기차가 언제 출발하는지 알아?", en: ["do you know when the train leaves"] }
+];
+
+const BE_QUESTIONS = [
+  { kr: "나는 학생이다.", en: ["i'm a student"] },
+  { kr: "나는 학생입니까?", en: ["am i a student"] },
+  { kr: "그는 내 친구이다.", en: ["he is my friend"] },
+  { kr: "그는 내 친구입니까?", en: ["is he my friend"] },
+  { kr: "우리는 바쁘다.", en: ["we are busy"] },
+  { kr: "우리는 바쁩니까?", en: ["are we busy"] },
+  { kr: "그녀는 집에 있다.", en: ["she is home"] },
+  { kr: "그녀는 집에 있습니까?", en: ["is she home"] },
+  { kr: "너는 피곤하니?", en: ["are you tired"] },
+  { kr: "나는 의사가 아니다.", en: ["i'm not a doctor"] },
+  { kr: "나는 의사가 아닙니까?", en: ["aren't i a doctor"] },
+  { kr: "그들은 행복하지 않다.", en: ["they aren't happy"] },
+  { kr: "그들은 행복하지 않습니까?", en: ["aren't they happy"] },
+  { kr: "이것은 내 책이다.", en: ["this is my book"] },
+  { kr: "이것은 내 책입니까?", en: ["is this my book"] },
+  { kr: "너는 한국 사람이니?", en: ["are you korean"] },
+  { kr: "그는 지금 방에 있지 않다.", en: ["he isn't in the room"] },
+  { kr: "그는 지금 방에 있지 않습니까?", en: ["isn't he in the room now"] },
+
+  { kr: "나는 지금 회사에 있다.", en: ["i'm at work"] },
+  { kr: "나는 지금 회사에 있습니까?", en: ["am i at work now"] },
+  { kr: "그는 학생이 아니다.", en: ["he isn't a student"] },
+  { kr: "그는 학생이 아닙니까?", en: ["isn't he a student"] },
+  { kr: "너희들은 준비됐니?", en: ["are you guys ready"] },
+  { kr: "그녀는 어제 아팠다.", en: ["she was sick yesterday"] },
+  { kr: "그녀는 어제 아팠습니까?", en: ["was she sick yesterday"] },
+  { kr: "우리는 어제 집에 있었다.", en: ["we were at home yesterday"] },
+  { kr: "우리는 어제 집에 있었습니까?", en: ["were we at home yesterday"] },
+  { kr: "그는 내 형이 아니다.", en: ["he isn't my brother"] },
+  { kr: "그는 내 형이 아닙니까?", en: ["isn't he my brother"] },
+  { kr: "이것들은 내 신발이다.", en: ["these are my shoes"] },
+  { kr: "이것들은 내 신발입니까?", en: ["are these my shoes"] },
+  { kr: "그들은 지금 바쁘니?", en: ["are they busy now"] },
+  { kr: "나는 어렸을 때 행복했다.", en: ["i was happy when i was young"] },
+  { kr: "나는 어렸을 때 행복했습니까?", en: ["was i happy when i was young"] },
+  { kr: "그녀는 어제 학교에 없었다.", en: ["she wasn't at school yesterday"] },
+  { kr: "그녀는 어제 학교에 없었습니까?", en: ["wasn't she at school yesterday"] },
+
+  { kr: "나는 지금 피곤하지 않다.", en: ["i'm not tired"] },
+  { kr: "나는 지금 피곤하지 않습니까?", en: ["aren't i tired now"] },
+  { kr: "그는 내 상사가 아니다.", en: ["he isn't my boss"] },
+  { kr: "그는 내 상사가 아닙니까?", en: ["isn't he my boss"] },
+  { kr: "너는 왜 화가 났니?", en: ["why are you mad"] },
+  { kr: "우리는 어제 매우 바빴다.", en: ["we were really busy yesterday"] },
+  { kr: "우리는 어제 매우 바빴습니까?", en: ["were we really busy yesterday"] },
+  { kr: "그녀는 음악에 관심이 있다.", en: ["she is really into music"] },
+  { kr: "그녀는 음악에 관심이 있습니까?", en: ["is she really into music"] },
+  { kr: "나는 영어 공부를 할 준비가 됐다.", en: ["i'm ready to study english"] },
+  { kr: "나는 영어 공부를 할 준비가 됐습니까?", en: ["am i ready to study english"] },
+  { kr: "그들은 새로운 환경에 익숙하다.", en: ["they are used to a new environment"] },
+  { kr: "그들은 새로운 환경에 익숙합니까?", en: ["are they used to a new environment"] },
+  { kr: "너는 지금 집에 있니?", en: ["are you home now"] },
+  { kr: "이것은 내 첫 번째 직업이었다.", en: ["this was my first job"] },
+  { kr: "이것은 내 첫 번째 직업이었습니까?", en: ["was this my first job"] },
+  { kr: "우리는 어렸을 때 친구였다.", en: ["we used to be friends"] },
+  { kr: "우리는 어렸을 때 친구였습니까?", en: ["did we use to be friends"] },
+
+  { kr: "나는 오늘 기분이 좋다.", en: ["i'm feeling good today"] },
+  { kr: "나는 오늘 기분이 좋습니까?", en: ["am i feeling good today"] },
+  { kr: "그는 지금 통화 중이다.", en: ["he is on the phone"] },
+  { kr: "그는 지금 통화 중입니까?", en: ["is he on the phone"] },
+  { kr: "너는 어디 출신이니?", en: ["where are you from"] },
+  { kr: "그녀는 어제 회의에 늦었다.", en: ["she was late for the meeting yesterday"] },
+  { kr: "그녀는 어제 회의에 늦었습니까?", en: ["was she late for the meeting yesterday"] },
+  { kr: "우리는 같은 팀이 아니다.", en: ["we are not on the same team"] },
+  { kr: "우리는 같은 팀이 아닙니까?", en: ["aren't we on the same team"] },
+  { kr: "그 책은 내 것이 아니다.", en: ["that book is not mine"] },
+  { kr: "그 책은 내 것이 아닙니까?", en: ["isn't that book mine"] },
+  { kr: "그들은 지금 무엇을 하고 있니?", en: ["what are they doing"] },
+  { kr: "나는 어렸을 때 수줍음이 많았다.", en: ["i was shy when i was young"] },
+  { kr: "나는 어렸을 때 수줍음이 많았습니까?", en: ["was i shy when i was young"] },
+  { kr: "너희들은 어제 학교에 있었니?", en: ["were you at school yesterday"] },
+  { kr: "그는 아직 준비가 안 됐다.", en: ["he isn't ready yet"] },
+  { kr: "그는 아직 준비가 안 됐습니까?", en: ["isn't he ready yet"] },
+
+  { kr: "나는 지금 길에 있다.", en: ["i'm on the street"] },
+  { kr: "나는 지금 길에 있습니까?", en: ["am i on the street"] },
+  { kr: "그는 내 옆에 있다.", en: ["he is next to me"] },
+  { kr: "그는 내 옆에 있습니까?", en: ["is he next to me"] },
+  { kr: "우리는 같은 상황에 있다.", en: ["we are in the same situation"] },
+  { kr: "우리는 같은 상황에 있습니까?", en: ["are we in the same situation"] },
+  { kr: "그녀는 어제 매우 피곤했다.", en: ["she was really tired yesterday"] },
+  { kr: "그녀는 어제 매우 피곤했습니까?", en: ["was she really tired yesterday"] },
+  { kr: "너는 무슨 생각을 하고 있니?", en: ["what are you thinking about"] },
+  { kr: "나는 그 소식에 놀랐다.", en: ["i was shocked by the news"] },
+  { kr: "나는 그 소식에 놀랐습니까?", en: ["was i shocked by the news"] },
+  { kr: "그들은 아직 준비되지 않았다.", en: ["they aren't ready yet"] },
+  { kr: "그들은 아직 준비되지 않았습니까?", en: ["aren't they ready yet"] },
+  { kr: "그는 항상 친절하다.", en: ["he is always nice"] },
+  { kr: "그는 항상 친절합니까?", en: ["is he always nice"] },
+  { kr: "너는 지금 바쁜 상태니?", en: ["are you busy now"] },
+  { kr: "우리는 어제 처음 만난 사이였다.", en: ["we first met yesterday", "we were strangers before we met"] },
+  { kr: "우리는 어제 처음 만난 겁니까?", en: ["did we first meet yesterday"] },
+
+  { kr: "나는 높은 곳을 무서워한다.", en: ["i'm afraid of heights"] },
+  { kr: "나는 높은 곳을 무서워합니까?", en: ["am i afraid of heights"] },
+  { kr: "그녀는 영어에 관심이 있다.", en: ["she is interested in english"] },
+  { kr: "그녀는 영어에 관심이 있습니까?", en: ["is she interested in english"] },
+  { kr: "그는 수학을 잘한다.", en: ["he is really good at math"] },
+  { kr: "그는 수학을 잘합니까?", en: ["is he really good at math"] },
+  { kr: "이 두 가지는 다르다.", en: ["these two things are different"] },
+  { kr: "이 두 가지는 다릅니까?", en: ["are these two things different"] },
+  { kr: "너는 무엇에 대해 걱정하고 있니?", en: ["what are you worried about"] },
+  { kr: "우리는 서로 비슷하다.", en: ["we are similar to each other"] },
+  { kr: "우리는 서로 비슷합니까?", en: ["are we similar to each other"] },
+  { kr: "그는 어제 긴장했다.", en: ["he was nervous yesterday"] },
+  { kr: "그는 어제 긴장했습니까?", en: ["was he nervous yesterday"] },
+  { kr: "나는 그 결과에 만족한다.", en: ["i am satisfied with the result"] },
+  { kr: "나는 그 결과에 만족합니까?", en: ["am i satisfied with the result"] },
+  { kr: "그들은 새로운 경험에 열려 있다.", en: ["they are open to new experiences"] },
+  { kr: "그들은 새로운 경험에 열려 있습니까?", en: ["are they open to new experiences"] },
+  { kr: "그녀는 내 생각에 동의한다.", en: ["she agrees with my opinion", "she agrees with me"] },
+  { kr: "그녀는 내 생각에 동의합니까?", en: ["does she agree with my opinion", "does she agree with me"] },
+
+  { kr: "내 방에 책상이 하나 있다.", en: ["there is a desk in my room"] },
+  { kr: "내 방에 책상이 하나 있습니까?", en: ["is there a desk in my room"] },
+  { kr: "이 근처에 카페가 있나요?", en: ["is there a cafe around here"] },
+  { kr: "교실에 학생들이 있나요?", en: ["are there any students in the classroom"] },
+  { kr: "냉장고 안에 우유가 없다.", en: ["there isn't any milk in the refrigerator"] },
+  { kr: "냉장고 안에 우유가 없습니까?", en: ["isn't there any milk in the refrigerator"] },
+  { kr: "어제 공원에 많은 사람들이 있었다.", en: ["there were a lot of people at the park yesterday"] },
+  { kr: "어제 공원에 많은 사람들이 있었습니까?", en: ["were there a lot of people at the park yesterday"] },
+  { kr: "이 도시에 좋은 식당들이 있나요?", en: ["are there any good restaurants in this city"] },
+  { kr: "내 가방 안에 휴대폰이 있다.", en: ["there is a phone in my bag"] },
+  { kr: "내 가방 안에 휴대폰이 있습니까?", en: ["is there a phone in my bag"] },
+  { kr: "그 방에는 의자가 없었다.", en: ["there wasn't a chair in the room"] },
+  { kr: "그 방에는 의자가 없었습니까?", en: ["wasn't there a chair in the room"] },
+  { kr: "너희 집 근처에 병원이 있니?", en: ["is there a hospital near your house"] },
+  { kr: "테이블 위에 문제가 있다.", en: ["there is a problem on the table"] },
+  { kr: "테이블 위에 문제가 있습니까?", en: ["is there a problem on the table"] },
+
+  { kr: "내 책상 위에 컴퓨터가 있다.", en: ["there is a computer on my desk"] },
+  { kr: "내 책상 위에 컴퓨터가 있습니까?", en: ["is there a computer on my desk"] },
+  { kr: "어제 회의가 있었나요?", en: ["was there a meeting yesterday"] },
+  { kr: "방 안에 아무도 없다.", en: ["there is nobody in the room"] },
+  { kr: "방 안에 아무도 없습니까?", en: ["is there nobody in the room"] },
+  { kr: "냉장고에 음식이 많이 있다.", en: ["there is a lot of food in the fridge"] },
+  { kr: "냉장고에 음식이 많이 있습니까?", en: ["is there a lot of food in the fridge"] },
+  { kr: "그때 공원에 아이들이 있었나요?", en: ["were there children in the park at that time"] },
+  { kr: "내 휴대폰에 문제가 있다.", en: ["there is a problem with my phone"] },
+  { kr: "내 휴대폰에 문제가 있습니까?", en: ["is there a problem with my phone"] },
+  { kr: "이 지역에는 좋은 학교가 없다.", en: ["there aren't any good schools in this neighborhood"] },
+  { kr: "이 지역에는 좋은 학교가 없습니까?", en: ["aren't there any good schools in this neighborhood"] },
+  { kr: "어젯밤에 파티가 있었다.", en: ["there was a party last night"] },
+  { kr: "어젯밤에 파티가 있었습니까?", en: ["was there a party last night"] },
+  { kr: "네 가방 안에 뭐가 있니?", en: ["what is in your bag", "what's in your bag"] },
+  { kr: "이 방에는 창문이 두 개 있다.", en: ["there are two windows in this room"] },
+  { kr: "이 방에는 창문이 두 개 있습니까?", en: ["are there two windows in this room"] }
+];
+
+const FEELING_QUESTIONS = [
+  { kr: "나 그 일 때문에 정말 기뻐.", en: ["i'm really happy about it", "i am really happy about it"] },
+  { kr: "나 오늘 너무 스트레스 받아!", en: ["i'm so stressed today", "i am so stressed today"] },
+  { kr: "나 정말 답답했어.", en: ["i was really frustrated"] },
+  { kr: "나 좀 헷갈려.", en: ["i'm a bit confused", "i am a bit confused"] },
+  { kr: "그거 정말 어색했어.", en: ["it was so awkward"] },
+  { kr: "나 너무 창피했어.", en: ["i was so embarrassed"] },
+  { kr: "나 완전 당황했어.", en: ["i totally freaked out"] },
+  { kr: "나 내 시험이 걱정돼.", en: ["i'm worried about my exam", "i am worried about my exam"] },
+  { kr: "너 만나는 게 기대돼!", en: ["i'm looking forward to seeing you", "i am looking forward to seeing you"] },
+  { kr: "네가 기억한다니 놀라워.", en: ["i'm surprised you remember", "i am surprised you remember"] },
+  { kr: "그 얘기 들었을 때 정말 놀랐었어.", en: ["i was really shocked when i heard it"] },
+  { kr: "그 풍경에 정말 놀랐었어.", en: ["i was really amazed by the view", "i was really amazed by that view"] },
+  { kr: "나 너무 짜증나.", en: ["i'm so annoyed", "i am so annoyed"] },
+  { kr: "음식이 좀 실망스러웠어.", en: ["the food was kind of disappointing"] },
+  { kr: "나 내일이 긴장돼.", en: ["i'm nervous about tomorrow", "i am nervous about tomorrow"] },
+  { kr: "나 너무 신나!", en: ["i'm so excited", "i am so excited"] },
+  { kr: "나 정말 감동받았어.", en: ["i'm really touched", "i am really touched"] },
+  { kr: "나 오늘 기분이 좀 안 좋아.", en: ["i'm feeling a bit down today", "i am feeling a bit down today"] },
+  { kr: "네가 좋아해서 다행이야.", en: ["i'm glad you like it", "i am glad you like it"] },
+  { kr: "나 그 일 때문에 정말 속상해.", en: ["i'm really upset about it", "i am really upset about it"] },
+];
+
+const FOOD_QUESTIONS = [
+  { kr: "나 한 입 먹어봐도 돼?", en: ["can i have a bite"] },
+  { kr: "한 모금 마셔볼래?", en: ["do you want to have a sip"] },
+  { kr: "나 너무 많이 먹었어.", en: ["i ate way too much"] },
+  { kr: "나 뭐 좀 먹고 올게.", en: ["i'm gonna grab a bite", "i am gonna grab a bite", "i'm going to grab a bite"] },
+  { kr: "나 뭔가 매운 게 땡겨.", en: ["i'm craving something spicy", "i am craving something spicy"] },
+  { kr: "나 뭔가 단 게 먹고 싶어.", en: ["i feel like eating something sweet"] },
+  { kr: "난 파스타로 할게.", en: ["i'll go for the pasta", "i will go for the pasta"] },
+  { kr: "난 보통 저녁을 가볍게 먹어.", en: ["i usually have a light dinner"] },
+  { kr: "나 오늘 아침 푸짐하게 먹었어.", en: ["i had a big breakfast today"] },
+  { kr: "이 햄버거 진짜 배불러.", en: ["this burger is really filling"] },
+  { kr: "저녁 먹었어?", en: ["did you have dinner"] },
+  { kr: "내 것도 좀 남겨줘.", en: ["save some for me"] },
+  { kr: "그거 정말 맛있어!", en: ["it tastes amazing"] },
+  { kr: "내가 먹어본 피자 중에 최고야!", en: ["it's the best pizza i've ever had", "it is the best pizza i have ever had"] },
+  { kr: "이것 좀 먹어봐. 정말 맛있어.", en: ["try this it's really good", "try this it is really good"] },
+  { kr: "와. 정말 맛있어 보인다!", en: ["oh my god it looks so good", "it looks so good"] },
+  { kr: "나 이탈리아 음식 정말 좋아해.", en: ["i'm a huge fan of italian food", "i am a huge fan of italian food"] },
+  { kr: "초콜릿 같은 맛이 나.", en: ["it tastes like chocolate"] },
+  { kr: "그거 상한 것 같아.", en: ["i think it's gone bad", "i think it is gone bad"] },
+  { kr: "나 별로 입맛이 없어.", en: ["i don't really have much of an appetite", "i do not really have much of an appetite"] },
+];
+
+const PLANS_QUESTIONS = [
+  { kr: "우리 약속 잡자.", en: ["we should make plans"] },
+  { kr: "나 그 날 약속 있어.", en: ["i have plans that day"] },
+  { kr: "나 못 갈 것 같아.", en: ["i don't think i can make it", "i do not think i can make it"] },
+  { kr: "다음으로 미룰 수 있을까?", en: ["can i take a rain check"] },
+  { kr: "저녁 7시 괜찮아?", en: ["does 7pm work for you", "does 7 pm work for you"] },
+  { kr: "넌 언제가 가장 괜찮아?", en: ["what time works best for you"] },
+  { kr: "우리 금요일로 바꿀 수 있을까?", en: ["can we change it to friday"] },
+  { kr: "내 스케줄 좀 확인해볼게.", en: ["let me check my schedule"] },
+  { kr: "내가 네 일정에 맞출 수 있어.", en: ["i can work around your schedule"] },
+  { kr: "내 스케줄 조정해볼게.", en: ["let me adjust my schedule"] },
+  { kr: "난 시간이 꽤 유동적이야.", en: ["i'm pretty flexible", "i am pretty flexible"] },
+  { kr: "그가 안 왔어.", en: ["he didn't show up", "he did not show up"] },
+  { kr: "약속 다시 잡을 수 있을까?", en: ["can we reschedule"] },
+  { kr: "8시로 시간 미룰 수 있을까?", en: ["can we push it back to 8pm", "can we push it back to 8 pm"] },
+  { kr: "5시로 시간 당길 수 있을까?", en: ["can we move it up to 5pm", "can we move it up to 5 pm"] },
+  { kr: "네가 날짜 정해.", en: ["you pick a date"] },
+  { kr: "너 이번주 주말 시간돼?", en: ["are you free this weekend"] },
+  { kr: "너 언제 쉬어?", en: ["when are you off"] },
+  { kr: "좀만 늦게 만날 수 있을까?", en: ["can we meet a bit later"] },
+  { kr: "나 20분 정도 늦어.", en: ["i'm gonna be about 20 minutes late", "i am gonna be about 20 minutes late", "i'm going to be about 20 minutes late"] },
+];
+
+const WEATHER_QUESTIONS = [
+  { kr: "기온이 올랐어.", en: ["the temperature went up"] },
+  { kr: "밤에는 기온이 떨어져.", en: ["the temperature drops at night"] },
+  { kr: "요즘 날씨가 점점 따뜻해지고 있어.", en: ["it's getting warmer these days", "it is getting warmer these days"] },
+  { kr: "요즘 날씨가 점점 시원해지고 있어.", en: ["it's getting cooler these days", "it is getting cooler these days"] },
+  { kr: "밖에 비가 많이 내리고 있어.", en: ["it's pouring outside", "it is pouring outside"] },
+  { kr: "오늘 너무 습해.", en: ["it's so humid today", "it is so humid today"] },
+  { kr: "오늘 아침은 좀 쌀쌀하게 느껴지네.", en: ["it feels a bit chilly this morning"] },
+  { kr: "오늘 황사가 정말 심해.", en: ["the yellow dust is really bad today"] },
+  { kr: "오늘 미세먼지가 정말 심해.", en: ["the fine dust is really bad today"] },
+  { kr: "오늘 공기 질이 너무 안 좋아.", en: ["the air quality is terrible today"] },
+  { kr: "나갈 때 마스크 꼭 써.", en: ["make sure to wear a mask when you go out"] },
+  { kr: "이번 주말에 한파가 와.", en: ["a cold wave is coming this weekend"] },
+  { kr: "장마철이 시작된 것 같아.", en: ["i think the rainy season has started"] },
+  { kr: "드디어 날이 갰네.", en: ["it finally cleared up"] },
+  { kr: "날씨가 변덕스러워.", en: ["the weather is unpredictable"] },
+  { kr: "나 이런 끈적한 날씨가 정말 싫어.", en: ["i hate this sticky weather"] },
+  { kr: "나 바람 좀 쐬야겠어.", en: ["i need to get some fresh air"] },
+  { kr: "이 더위에 밖에 나가고 싶지 않아.", en: ["i don't want to go outside in this heat", "i do not want to go outside in this heat"] },
+  { kr: "벌써 여름처럼 느껴져.", en: ["it feels like summer already"] },
+  { kr: "일기예보에서 내일 비가 올 거래.", en: ["the forecast says it'll rain tomorrow", "the forecast says it will rain tomorrow"] },
+];
+
+const SNS_QUESTIONS = [
+  { kr: "나 뭘 해야 할지 모르겠어.", en: ["idk what to do"] },
+  { kr: "나 가는 길이야.", en: ["i'm omw", "i am omw"] },
+  { kr: "아 맞다, 너희 가족은 잘 지내?", en: ["btw how's your family", "btw how is your family"] },
+  { kr: "솔직히, 좀 실망스러웠어.", en: ["tbh it was a bit disappointing"] },
+  { kr: "거짓말 아니고, 나 이거 너무 좋아.", en: ["ngl i really like it"] },
+  { kr: "참고로, 그거 다음 주에 시작해.", en: ["fyi it starts next week"] },
+  { kr: "밤새 일하고 있는 상황.", en: ["pov you're working all night", "pov you are working all night"] },
+  { kr: "내가 한 말 신경 쓰지마.", en: ["never mind"] },
+  { kr: "걍 농담이야 ㅎㅎ", en: ["i'm just jk haha", "i am just jk haha", "jk haha"] },
+  { kr: "어떻게 되는지 알려줘.", en: ["lmk how it goes"] },
+  { kr: "내 생각엔, 그게 더 좋아보여.", en: ["imo it looks better"] },
+  { kr: "나 지금 바빠.", en: ["i'm busy rn", "i am busy rn"] },
+  { kr: "내 최애 바. 아는 사람은 알지.", en: ["my favorite bar iykyk"] },
+  { kr: "진짜로, 그거 최고였어!", en: ["fr it was the best"] },
+  { kr: "ㅋㅋㅋㅋ 그거 너무 웃겨.", en: ["lmao that's so funny", "lmao that is so funny"] },
+  { kr: "그는 엄청 멍청해.", en: ["he's stupid af", "he is stupid af"] },
+  { kr: "최대한 빨리 갈게.", en: ["i'll be there asap", "i will be there asap"] },
+  { kr: "안녕! 나중에 얘기하자.", en: ["bye ttyl"] },
+  { kr: "그녀는 내 베프야.", en: ["she's my bff", "she is my bff"] },
+  { kr: "혹시 놓쳤다면, 이게 주소야.", en: ["icymi this is the address"] },
+];
+
+const LESSON1_QUESTIONS = [
+  { kr: "난 항상 내 숙제를 미뤄.", en: ["i always put off my homework"] },
+  { kr: "난 항상 출근길에 커피를 사.", en: ["i always buy coffee on my way to work"] },
+  { kr: "난 보통 빨래를 주말에 해.", en: ["i usually do the laundry on weekends"] },
+  { kr: "난 보통 6시쯤에 퇴근해.", en: ["i usually get off work around 6"] },
+  { kr: "난 보통 금요일마다 친구들과 놀아.", en: ["i usually hang out with my friends on fridays"] },
+  { kr: "난 가끔 늦게까지 유튜브를 봐.", en: ["i sometimes watch youtube until late"] },
+  { kr: "난 가끔 내가 귀찮을 때 배달 음식을 시켜.", en: ["i sometimes order delivery food when i'm lazy", "i sometimes order delivery food when i am lazy", "i sometimes order delivery when i'm lazy"] },
+  { kr: "너 목소리가 거의 안 들려.", en: ["i can hardly hear you"] },
+  { kr: "나 집에서 거의 요리 안 해.", en: ["i hardly ever cook at home"] },
+  { kr: "나 이 노래는 절대 안 질려.", en: ["i never get tired of this song"] },
+  { kr: "디저트는 절대 거절 안 하지.", en: ["i never say no to dessert"] },
+  { kr: "그녀는 절대 늦지 않아.", en: ["she's never late", "she is never late"] },
+];
+
+const LESSON2_QUESTIONS = [
+  { kr: "나 결국 내 직장 관두기로 (결정)했어.", en: ["i finally decided to quit my job"] },
+  { kr: "나 그와 퇴근 후에 만나기로 약속 했어.", en: ["i promised to meet him after work"] },
+  { kr: "미안.. 아까 답장하는 거 깜빡했어.", en: ["sorry i forgot to answer earlier"] },
+  { kr: "헉! 나 오늘 아침에 고양이 밥주는 거 깜빡했어!", en: ["oh my god i forgot to feed my cat this morning"] },
+  { kr: "나 어딘가로 정말 여행가고 싶어.", en: ["i really want to travel somewhere"] },
+  { kr: "나 내일 일찍 일어나야만 해서.. 나중에 얘기하자!", en: ["i have to get up early tomorrow so i'll talk to you later", "i have to get up early tomorrow so i will talk to you later", "i gotta get up early tomorrow so i'll talk to you later"] },
+  { kr: "아.. 걔 이름 뭐였지..? 나 계속 그걸 까먹어.", en: ["ugh what was his name i keep forgetting it"] },
+  { kr: "나 방금 내 집 청소 끝냈어.", en: ["i just finished cleaning my house"] },
+  { kr: "난 꽤 외향적이라, 새로운 사람들 만나는 걸 즐겨.", en: ["i'm pretty extroverted so i enjoy meeting new people", "i am pretty extroverted so i enjoy meeting new people"] },
+  { kr: "나 그거 밤새 몰아봤어. 그거 보는 걸 멈출 수가 없어!", en: ["i binge-watched it all night i can't stop watching it", "i binge watched it all night i can't stop watching it", "i binge-watched it all night i cannot stop watching it"] },
+  { kr: "내 남편은 작년에 담배를 끊었어.", en: ["my husband quit smoking last year"] },
+  { kr: "비가 그친 것 같아.", en: ["i think it stopped raining"] },
+  { kr: "난 요즘 혼자 시간 보내는 게 더 좋아.", en: ["these days i prefer spending time alone", "i prefer spending time alone these days"] },
+];
+
+const LESSON3_QUESTIONS = [
+  { kr: "매일 일찍 일어나는 건 힘들어. 나 아침형 인간은 아니야.", en: ["it's hard to get up early every day i'm not a morning person", "it is hard to get up early every day i am not a morning person"] },
+  { kr: "거절하는 게 힘들어.", en: ["it's hard to say no", "it is hard to say no"] },
+  { kr: "가끔씩 쉬어 주는 건 정말 중요해.", en: ["it's really important to take a break sometimes", "it is really important to take a break sometimes"] },
+  { kr: "내 목표는 영어를 더 유창하게 말하는 거야.", en: ["my goal is to speak english more fluently"] },
+  { kr: "TV에 볼 게 없어. 그냥 넷플릭스나 보자.", en: ["there's nothing to watch on tv let's just watch netflix", "there is nothing to watch on tv let's just watch netflix"] },
+  { kr: "냉장고에 먹을 게 없어. 오늘은 그냥 라면이나 먹자.", en: ["there's nothing to eat in the fridge let's just eat ramen today", "there is nothing to eat in the fridge let's just eat ramen today"] },
+  { kr: "커피 좀 사려고 나갔었어.", en: ["i went out to get some coffee", "i went out to buy some coffee"] },
+  { kr: "지난 주말에, 나 내 친구들 만나러 성수에 갔었어.", en: ["last weekend, i went to seongsu to meet my friends", "last weekend i went to seongsu to meet my friends"] },
+  { kr: "우리 엄마가 내게 김치 담그는 법을 가르쳐줬어.", en: ["my mom taught me how to make kimchi"] },
+  { kr: "우리 어디서 만날지, 언제 만날지, 뭘 할지 등 정해야 돼..", en: ["we need to decide where to meet, when to meet, what to do and stuff", "we need to decide where to meet when to meet what to do and stuff"] },
+];
+
+const MY_QUESTIONS = [
+  { kr: "어떻게 매운 음식을 그렇게 잘 먹어?", en: ["how can you handle spicy food that well"] },
+  { kr: "어떻게 술 마시는 걸 안 좋아할 수 있어?", en: ["how can you not like drinking"] },
+  { kr: "어떻게 공포 영화를 좋아할 수 있어?", en: ["how can you like horror movies"] },
+  { kr: "우리 얼마나 지연될 예정이야?", en: ["how long are we gonna be delayed for"] },
+  { kr: "한 시간 기다릴 가치가 있어?", en: ["is it worth waiting an hour for"] },
+  { kr: "스테이크에는 뭐가 같이 나와?", en: ["what does the steak come with"] },
+  { kr: "혹시 내 핸드폰이 어디 있는지 알아?", en: ["do you happen to know where my phone is"] },
+  { kr: "왜 그렇게 했어? (뭐 때문에 그렇게 한 거야?)", en: ["what made you do that"] },
+  { kr: "나 그냥 독립해서 해외에서 살고 싶어.", en: ["i just wanna move out and live abroad", "i just want to move out and live abroad"] },
+  { kr: "부모님이 꽤 엄격하셔서 좀 힘들었어.", en: ["it was kinda hard because my parents are quite strict", "it was kind of hard because my parents are quite strict"] },
+  { kr: "네가 가장 집처럼 편안하게 느끼는 곳이 있어?", en: ["is there a place you feel most at home at"] },
+  { kr: "직업이 뭐예요?", en: ["what is your profession"] },
+  { kr: "음악은 항상 내 삶의 일부였어.", en: ["music was always a part of my life"] },
+  { kr: "너는 왜 다들 너한테 동의하게 만들려고 그렇게 집착해?", en: ["what is this obsessive need you have to make everyone agree with you"] },
+  { kr: "어떻게 이걸 안 믿을 수 있어?", en: ["how can you not believe this"] },
+  { kr: "요즘 다시 스콘에 빠졌어.", en: ["i've gotten back into scones these days", "i have gotten back into scones these days", "i've gotten back into scone these days"] },
+  { kr: "오늘 비 올 수도 있어.", en: ["it could rain today"] },
+  { kr: "이 계획은 괜찮을 수 있어. 근데 우리 조심해야 해.", en: ["this plan could work but we need to be careful", "this plans could work but we need to be careful"] },
+  { kr: "그의 이야기가 진짜일 수도 있어.", en: ["his story could be true"] },
+  { kr: "오늘 버스가 일찍 올 수도 있어.", en: ["the bus could arrive early today"] },
+  { kr: "우리는 길을 잃을 수도 있어.", en: ["we could get lost in the dark"] },
+  { kr: "그녀가 바쁠 수도 있어.", en: ["she could be busy now"] },
+  { kr: "그 여행은 돈이 많이 들 수도 있어.", en: ["this trip could cost a lot"] },
+  { kr: "날씨가 확확 바뀔 수 있어.", en: ["the weather could change quickly"] },
+  { kr: "이 동네에서 밤에 혼자 걷는 건 위험할 수 있어.", en: ["walking alone in this neighborhood at night could be dangerous"] },
+  { kr: "네가 원하면 우리 이거 같이 나눠도 돼.", en: ["we could share this if you want"] },
+  { kr: "네가 원하면 우리 저녁 먹으러 나가도 돼.", en: ["we could go out for dinner if you want"] },
+  { kr: "네가 원하면 우리 선생님한테 물어봐도 돼.", en: ["we could ask the teacher if you want"] },
+  { kr: "네가 원하면 우리 영화 봐도 돼.", en: ["we could watch a movie if you want", "we could watch movie if you want"] },
+  { kr: "저녁 먹고 우리 공원 산책해도 돼.", en: ["we could walk around the park after dinner"] },
+  { kr: "너 집에서 좀 쉬어도 돼.", en: ["you could stay home and get some rest"] },
+  { kr: "한국 콘텐츠 보는 걸 줄이려고 노력하고 있어.", en: ["i've been trying to cut down on watching korean content", "i have been trying to cut down on watching korean content"] },
+  { kr: "그게 내가 일하는 이유야. (그걸 위해 일해.)", en: ["that's what i work for", "that is what i work for"] },
+  { kr: "그래서 내가 열심히 일하는 거야.", en: ["that's why i work hard", "that is why i work hard"] },
+  { kr: "그래서 내가 돈을 버는 거야.", en: ["that's why i make money", "that is why i make money"] },
+  { kr: "오늘 뭐가 당겨?", en: ["what are you craving today"] },
+  { kr: "오늘은 뭐 먹고 싶은 기분이야?", en: ["what are you in the mood for today"] },
+  { kr: "나 진짜 단 게 당겨.", en: ["i'm really craving something sweet", "i am really craving something sweet"] },
+  { kr: "이거 우리 둘이 먹기에 충분할까?", en: ["will this be enough for the two of us"] },
+  { kr: "무슨 맛이야? 맛있어?", en: ["what does it taste like is it good"] },
+  { kr: "진짜 맛있어 보인다. 무슨 맛인지 궁금해.", en: ["it looks really good i'm wondering what it tastes like", "it looks really good i am wondering what it tastes like"] },
+  { kr: "원하면 내가 두 명분 만들 수 있어.", en: ["i could make enough for two if you want"] },
+  { kr: "두 명에게는 충분한데 세 명에게는 부족할 거야.", en: ["it'll be enough for two, but not three", "it will be enough for two, but not three", "it'll be enough for two but not three"] },
+  { kr: "우리 생각이 잘 통하는 것 같아.", en: ["i think we're on the same wavelength", "i think we are on the same wavelength"] },
+  { kr: "우리 진짜 잘 맞는 것 같아.", en: ["i think we really click"] },
+  { kr: "우리 처음 만났을 때부터 정말 잘 통했어.", en: ["we really clicked as soon as we first met"] },
+  { kr: "거기에 한국인 있어?", en: ["are there any koreans there"] },
+  { kr: "거기에 여자들 있어?", en: ["are there any girls there"] },
+  { kr: "나는 계속 스스로 최선을 다하라고 되새겨.", en: ["i keep reminding myself to do my best"] },
+  { kr: "언젠가는 잘 풀릴 거라고 계속 스스로 되새겨.", en: ["i keep reminding myself that it's gonna work out someday", "i keep reminding myself that it is gonna work out someday"] },
+  { kr: "너도 가끔 그냥 운동 거를 때 있어?", en: ["do you ever just skip working out"] },
+  { kr: "아무것도 하기 싫을 때 그냥 배달 시켜 먹기도 해?", en: ["do you ever just order delivery when you don't feel like doing anything", "do you ever just order delivery when you do not feel like doing anything"] },
+  { kr: "평소에는 단 걸 별로 안 좋아하는데도 가끔 단 게 당길 때 있어?", en: ["do you ever crave something sweet even though you don't usually go for sweet things", "do you ever crave something sweet even though you do not usually go for sweet things"] },
+  { kr: "누군가에게 ~을 사주다 (대접하다)", en: ["treat someone to something"] },
+  { kr: "나 자신에게 맛있고 든든한 저녁을 사줄 거야.", en: ["i'm gonna treat myself to a nice, hearty dinner", "i am gonna treat myself to a nice, hearty dinner", "i'm gonna treat myself to a nice hearty dinner"] },
+  { kr: "처음으로 나 자신에게 명품 가방을 사줄 거야.", en: ["i'm gonna treat myself to a designer bag for the first time", "i am gonna treat myself to a designer bag for the first time"] },
+  { kr: "처음으로 나 자신에게 명품 가방을 하나 사줄까 생각 중이야.", en: ["i'm thinking of treating myself to a designer bag for the first time", "i am thinking of treating myself to a designer bag for the first time"] },
+  { kr: "어버이날에 부모님께 맛있는 저녁을 대접할까 생각 중이야.", en: ["i'm thinking of treating my parents to a nice dinner for parents' day", "i am thinking of treating my parents to a nice dinner for parents' day", "i'm thinking of treating my parents to a nice dinner for parents day"] },
+  { kr: "그는 나를 위해 모든 걸 다 챙겨줘.", en: ["he takes care of everything for me"] },
+  { kr: "우리 부모님은 건강을 좀 더 잘 챙기셔야 해.", en: ["my parents need to take better care of their health"] },
+  { kr: "너는 피부 관리를 꾸준히 해야 해.", en: ["you need to take care of your skin regularly"] },
+  { kr: "이번 주에는 친구가 일주일 동안 여행을 가서 내가 친구 강아지를 돌봐주고 있어.", en: ["i'm taking care of my friend's dog this week because my friend is going on a trip for a week", "i am taking care of my friend's dog this week because my friend is going on a trip for a week"] },
+  { kr: "그거 때문에 너무 속상해하지 마.", en: ["don't let it bum you out", "do not let it bum you out"] },
+  { kr: "나 진짜 속상해. (나 완전 우울해.)", en: ["i'm really bummed out", "i am really bummed out"] },
+  { kr: "나는 새로운 걸 금방 익히는 편이야.", en: ["i'm really good at getting the hang of things", "i am really good at getting the hang of things"] },
+  { kr: "몇 번 해보면 요령을 터득하게 될 거야.", en: ["if you try it a couple of times, you will get the hang of it", "if you try it a couple of times you will get the hang of it"] },
+  { kr: "네가 통제할 수 없는 일 때문에 속상해하지 마.", en: ["don't let what you can't control bum you out", "do not let what you can not control bum you out"] },
+  { kr: "너무 기대하지 마. 그녀가 못 해낼 수도 있어.", en: ["don't get your hopes up she might not make it", "do not get your hopes up she might not make it"] },
+  { kr: "모르는 척하지 마. 네가 알고 있다는 거 나도 알아.", en: ["don't pretend you don't know i know you know", "do not pretend you do not know i know you know"] },
+  { kr: "너는 실제보다 더 크게 일을 만들고 있어.", en: ["you are making a bigger deal than it really is"] },
+  { kr: "생일축하해. 하루 늦어서 미안해.", en: ["happy belated birthday i'm sorry i'm a day late", "happy belated birthday i am sorry i am a day late"] },
+  { kr: "너희 엄마가 지난번에 해준 부대찌개가 이것보다 더 맛있어.", en: ["the budae-jjigae your mom made last time is so much better than this", "the 부대찌개 your mom made last time is so much better than this", "the budae jjigae your mom made last time is so much better than this"] },
+  { kr: "나 브라우니 줄려고 잠깐 들렸어. 오래 못 있고 가야 해.", en: ["i just stopped by to give you a brownie i can't stay long i gotta go", "i just stopped by to give you brownies i can't stay long i gotta go"] },
+  { kr: "어제 운동 진짜 좋았어.", en: ["i had a good workout yesterday", "i had a good work out yesterday"] },
+  { kr: "나 하루에 8천보 이상 걸으려고 노력하고 있어.", en: ["i'm trying to walk at least 8,000 steps a day", "i am trying to walk at least 8,000 steps a day", "i'm trying to walk at least 8000 steps a day"] },
+];
+
+// Expand contractions to full form so "it's"/"it is", "don't"/"do not" etc. always match.
+function expandContractions(s) {
+  return s
+    .replace(/\bwon't\b/g, "will not")
+    .replace(/\bcan't\b/g, "can not")
+    .replace(/\bshan't\b/g, "shall not")
+    .replace(/(\w+)n't\b/g, "$1 not")
+    .replace(/\b(it|that|this|what|who|where|when|why|how|there|he|she|here)'s\b/g, "$1 is")
+    .replace(/\b(you|we|they)'re\b/g, "$1 are")
+    .replace(/\bi'm\b/g, "i am")
+    .replace(/\b(i|you|we|they)'ve\b/g, "$1 have")
+    .replace(/\b(i|you|we|they|it|he|she)'ll\b/g, "$1 will")
+    .replace(/\blet's\b/g, "let us")
+    .replace(/\b(\w+)'d\b/g, "$1 would");
+}
+
+function normalize(s) {
+  return expandContractions(s.toLowerCase().trim())
+    .replace(/[.,!?'"]/g, "")
+    .replace(/\s+/g, " ");
+}
+
+// Groups of interchangeable words — swapping within a group still counts as correct.
+const SYNONYM_GROUPS = [
+  ["angry", "mad", "upset", "furious", "annoyed"],
+  ["sad", "unhappy", "down", "blue"],
+  ["happy", "glad", "pleased"],
+  ["tired", "exhausted", "sleepy"],
+  ["hungry", "starving"],
+  ["quiet", "silent"],
+  ["kind", "nice", "sweet"],
+  ["boring", "dull"],
+  ["interesting", "fun"],
+  ["expensive", "pricey", "costly"],
+  ["heavy", "weighty"],
+  ["buy", "purchase", "get"],
+  ["bought", "purchased", "got"],
+  ["call", "phone", "ring"],
+  ["called", "phoned", "rang"],
+  ["fix", "repair"],
+  ["fixed", "repaired"],
+  ["start", "begin"],
+  ["started", "began"],
+  ["decide", "choose"],
+  ["decided", "chose"],
+  ["finish", "complete", "end"],
+  ["finished", "completed", "ended"],
+  ["hurt", "injured"],
+  ["meet", "see"],
+  ["met", "saw"],
+  ["want", "wanna"],
+  ["tell", "say"],
+  ["told", "said"],
+  ["famous", "popular", "well-known"],
+  ["busy", "swamped", "slammed"],
+  ["late", "delayed"],
+  ["smart", "clever"],
+  ["big", "large"],
+  ["small", "little"],
+  ["scared", "afraid", "frightened"]
+];
+
+const CANONICAL_WORD = {};
+SYNONYM_GROUPS.forEach(group => {
+  group.forEach(word => { CANONICAL_WORD[word] = group[0]; });
+});
+
+// "going to" <-> "gonna" and "want to" <-> "wanna" always count as the same answer.
+function expandShortcuts(str) {
+  return str
+    .replace(/\bgoing to\b/g, "gonna")
+    .replace(/\bwant to\b/g, "wanna");
+}
+
+// Filler/hedge words that don't change the core meaning — ignored on both sides
+// so "friend" vs "my friend", "good" vs "pretty good", "kind of boring" vs "boring" all match.
+const FILLER_WORDS = new Set([
+  "a", "an", "the", "so", "just", "really", "actually",
+  "definitely", "totally", "very", "quite", "super", "pretty",
+  "also", "still", "now", "kind", "sort", "of", "bit",
+  "my", "your", "our",
+  "absolutely", "extremely", "seriously", "honestly", "literally",
+  "truly", "genuinely", "kinda", "sorta", "basically", "completely",
+  "incredibly", "insanely"
+]);
+
+function toCanonical(normalizedStr) {
+  return expandShortcuts(normalizedStr)
+    .split(" ")
+    .filter(word => word.length > 0 && !FILLER_WORDS.has(word))
+    .map(word => CANONICAL_WORD[word] || word)
+    .join(" ");
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+// Word-level alignment between the correct answer and what the user typed,
+// via edit distance, so we can point out exactly which words are wrong.
+function alignTokens(correctTokens, userTokens) {
+  const n = correctTokens.length, m = userTokens.length;
+  const dp = Array.from({ length: n + 1 }, () => new Array(m + 1).fill(0));
+  for (let i = 0; i <= n; i++) dp[i][0] = i;
+  for (let j = 0; j <= m; j++) dp[0][j] = j;
+  for (let i = 1; i <= n; i++) {
+    for (let j = 1; j <= m; j++) {
+      if (correctTokens[i - 1] === userTokens[j - 1]) {
+        dp[i][j] = dp[i - 1][j - 1];
+      } else {
+        dp[i][j] = 1 + Math.min(dp[i - 1][j - 1], dp[i - 1][j], dp[i][j - 1]);
+      }
+    }
+  }
+  let i = n, j = m;
+  const ops = [];
+  while (i > 0 || j > 0) {
+    if (i > 0 && j > 0 && correctTokens[i - 1] === userTokens[j - 1]) {
+      ops.push({ type: "equal", word: correctTokens[i - 1] });
+      i--; j--;
+    } else if (i > 0 && j > 0 && dp[i][j] === dp[i - 1][j - 1] + 1) {
+      ops.push({ type: "sub", correct: correctTokens[i - 1], user: userTokens[j - 1] });
+      i--; j--;
+    } else if (i > 0 && dp[i][j] === dp[i - 1][j] + 1) {
+      ops.push({ type: "missing", correct: correctTokens[i - 1] });
+      i--;
+    } else {
+      ops.push({ type: "extra", user: userTokens[j - 1] });
+      j--;
+    }
+  }
+  ops.reverse();
+  return { distance: dp[n][m], ops };
+}
+
+// Among all accepted answers, find the one closest to what the user typed
+// so the correction hints point at the most relevant version.
+function pickClosestAnswer(accList, userTokens) {
+  let bestAnswer = normalize(accList[0]);
+  let bestInfo = null;
+  let bestDist = Infinity;
+  accList.forEach(acc => {
+    const accNorm = normalize(acc);
+    const accTokens = accNorm.split(" ").filter(Boolean);
+    const info = alignTokens(accTokens, userTokens);
+    if (info.distance < bestDist) {
+      bestDist = info.distance;
+      bestAnswer = accNorm;
+      bestInfo = info;
+    }
+  });
+  return { answer: bestAnswer, info: bestInfo };
+}
+
+function buildCorrectionHtml(ops) {
+  const mismatches = ops.filter(o => o.type !== "equal");
+  if (mismatches.length === 0) return "";
+  const lines = mismatches.map(o => {
+    if (o.type === "sub") {
+      return `<span class="diff-wrong">${escapeHtml(o.user)}</span> → <span class="diff-right">${escapeHtml(o.correct)}</span>`;
+    } else if (o.type === "missing") {
+      return `<span class="diff-wrong">(빠짐)</span> → <span class="diff-right">${escapeHtml(o.correct)}</span>`;
+    } else {
+      return `<span class="diff-wrong">${escapeHtml(o.user)}</span> → <span class="diff-right">(삭제)</span>`;
+    }
+  });
+  return `<div class="correction-list">${lines.join("<br>")}</div>`;
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+const TESTS = {
+  my_sentences: { label: "내 문장", questions: MY_QUESTIONS },
+  vocab: { label: "초급 보카 회화 테스트", questions: VOCAB_QUESTIONS },
+  wh: { label: "의문사 영작 테스트", questions: WH_QUESTIONS },
+  beverb: { label: "Be동사 문장 연습", questions: BE_QUESTIONS },
+  b_feeling: { label: "초급 보카 회화 테스트 · 감정", questions: FEELING_QUESTIONS },
+  b_food: { label: "초급 보카 회화 테스트 · 음식", questions: FOOD_QUESTIONS },
+  b_plans: { label: "초급 보카 회화 테스트 · 약속", questions: PLANS_QUESTIONS },
+  b_weather: { label: "초급 보카 회화 테스트 · 날씨", questions: WEATHER_QUESTIONS },
+  b_sns: { label: "초급 보카 회화 테스트 · 줄임말", questions: SNS_QUESTIONS },
+  b_all: { label: "초급 보카 회화 테스트 · 전체", questions: [...FEELING_QUESTIONS, ...FOOD_QUESTIONS, ...PLANS_QUESTIONS, ...WEATHER_QUESTIONS, ...SNS_QUESTIONS] },
+  b_lesson1: { label: "수업 문장 · 1과", questions: LESSON1_QUESTIONS },
+  b_lesson2: { label: "수업 문장 · 2과", questions: LESSON2_QUESTIONS },
+  b_lesson3: { label: "수업 문장 · 3과", questions: LESSON3_QUESTIONS },
+  b_lesson_all: { label: "수업 문장 · 전체", questions: [...LESSON1_QUESTIONS, ...LESSON2_QUESTIONS, ...LESSON3_QUESTIONS] }
+};
+
+let activeTestKey = null;
+let activeQuestions = [];
+let selectedCount = 20;
+let order = [];
+let idx = 0;
+let score = 0;
+let answered = false;
+let wrongQuestions = [];
+
+const screenMonth = document.getElementById("screenMonth");
+const screenTestsA = document.getElementById("screenTestsA");
+const screenTestsB = document.getElementById("screenTestsB");
+const screenCategoryB = document.getElementById("screenCategoryB");
+const screenLessonCategory = document.getElementById("screenLessonCategory");
+const backFromLessonCategory = document.getElementById("backFromLessonCategory");
+const lesson1Btn = document.getElementById("lesson1Btn");
+const lesson2Btn = document.getElementById("lesson2Btn");
+const lesson3Btn = document.getElementById("lesson3Btn");
+const lessonAllBtn = document.getElementById("lessonAllBtn");
+const mySentencesBtn = document.getElementById("mySentencesBtn");
+const monthABtn = document.getElementById("monthABtn");
+const monthBBtn = document.getElementById("monthBBtn");
+const backFromA = document.getElementById("backFromA");
+const backFromB = document.getElementById("backFromB");
+const backFromCategoryB = document.getElementById("backFromCategoryB");
+const testBVocabBtn = document.getElementById("testBVocabBtn");
+const testLessonBtn = document.getElementById("testLessonBtn");
+const catFeelingBtn = document.getElementById("catFeelingBtn");
+const catFoodBtn = document.getElementById("catFoodBtn");
+const catPlansBtn = document.getElementById("catPlansBtn");
+const catWeatherBtn = document.getElementById("catWeatherBtn");
+const catSnsBtn = document.getElementById("catSnsBtn");
+const catAllBtn = document.getElementById("catAllBtn");
+const homeLink = document.getElementById("homeLink");
+const goHomeBtn = document.getElementById("goHomeBtn");
+const testVocabBtn = document.getElementById("testVocabBtn");
+const testWhBtn = document.getElementById("testWhBtn");
+const testBeverbBtn = document.getElementById("testBeverbBtn");
+const setupTestLabel = document.getElementById("setupTestLabel");
+const setupCard = document.getElementById("setupCard");
+const totalCount = document.getElementById("totalCount");
+const countOptions = document.getElementById("countOptions");
+const startBtn = document.getElementById("startBtn");
+const metaRow = document.getElementById("metaRow");
+const progressBar = document.getElementById("progressBar");
+const promptText = document.getElementById("promptText");
+const answerInput = document.getElementById("answerInput");
+const checkBtn = document.getElementById("checkBtn");
+const skipBtn = document.getElementById("skipBtn");
+const feedback = document.getElementById("feedback");
+const progressText = document.getElementById("progressText");
+const scoreText = document.getElementById("scoreText");
+const progressFill = document.getElementById("progressFill");
+const quizCard = document.getElementById("quizCard");
+const summaryCard = document.getElementById("summaryCard");
+const finalScore = document.getElementById("finalScore");
+const finalMsg = document.getElementById("finalMsg");
+const restartBtn = document.getElementById("restartBtn");
+const reviewWrongBtn = document.getElementById("reviewWrongBtn");
+
+function hideAllScreens() {
+  screenMonth.style.display = "none";
+  screenTestsA.style.display = "none";
+  screenTestsB.style.display = "none";
+  screenCategoryB.style.display = "none";
+  screenLessonCategory.style.display = "none";
+  homeLink.style.display = "none";
+  setupCard.style.display = "none";
+  quizCard.style.display = "none";
+  summaryCard.style.display = "none";
+  metaRow.style.display = "none";
+  progressBar.style.display = "none";
+}
+
+function showMonthSelect() {
+  hideAllScreens();
+  screenMonth.style.display = "block";
+}
+
+function showTestsA() {
+  hideAllScreens();
+  screenTestsA.style.display = "block";
+}
+
+function showTestsB() {
+  hideAllScreens();
+  screenTestsB.style.display = "block";
+}
+
+function showCategoryB() {
+  hideAllScreens();
+  screenCategoryB.style.display = "block";
+}
+
+function showLessonCategory() {
+  hideAllScreens();
+  screenLessonCategory.style.display = "block";
+}
+
+function selectTest(key) {
+  activeTestKey = key;
+  activeQuestions = TESTS[key].questions;
+  selectedCount = Math.min(20, activeQuestions.length);
+  hideAllScreens();
+  homeLink.style.display = "block";
+  setupCard.style.display = "block";
+  renderSetup();
+}
+
+function goHome() {
+  showMonthSelect();
+}
+
+function renderSetup() {
+  setupTestLabel.textContent = `${TESTS[activeTestKey].label} — 문제 개수 선택`;
+  totalCount.textContent = activeQuestions.length;
+  countOptions.innerHTML = "";
+  const countOpts = [...new Set([10, 20, 30, 50, activeQuestions.length])].filter(n => n <= activeQuestions.length);
+  countOpts.forEach(count => {
+    const chip = document.createElement("button");
+    chip.type = "button";
+    chip.className = "chip" + (count === selectedCount ? " selected" : "");
+    chip.textContent = count === activeQuestions.length ? `전체 (${count})` : `${count}문제`;
+    chip.addEventListener("click", () => {
+      selectedCount = count;
+      renderSetup();
+    });
+    countOptions.appendChild(chip);
+  });
+}
+
+function startQuiz() {
+  order = shuffle(activeQuestions).slice(0, selectedCount);
+  idx = 0;
+  score = 0;
+  wrongQuestions = [];
+  setupCard.style.display = "none";
+  summaryCard.style.display = "none";
+  metaRow.style.display = "flex";
+  progressBar.style.display = "block";
+  quizCard.style.display = "block";
+  renderQuestion();
+}
+
+function reviewWrongOnly() {
+  if (wrongQuestions.length === 0) return;
+  order = shuffle(wrongQuestions);
+  idx = 0;
+  score = 0;
+  wrongQuestions = [];
+  setupCard.style.display = "none";
+  summaryCard.style.display = "none";
+  metaRow.style.display = "flex";
+  progressBar.style.display = "block";
+  quizCard.style.display = "block";
+  renderQuestion();
+}
+
+function renderQuestion() {
+  answered = false;
+  const q = order[idx];
+  promptText.textContent = q.kr;
+  answerInput.value = "";
+  answerInput.readOnly = false;
+  feedback.className = "feedback";
+  feedback.innerHTML = "";
+  checkBtn.textContent = "채점하기";
+  skipBtn.style.display = "block";
+  progressText.textContent = `문제 ${idx + 1} / ${order.length}`;
+  scoreText.textContent = `맞은 개수: ${score}`;
+  progressFill.style.width = `${(idx / order.length) * 100}%`;
+  answerInput.focus();
+}
+
+function checkAnswer() {
+  const q = order[idx];
+  const userAnswer = normalize(answerInput.value);
+  const userCanonical = toCanonical(userAnswer);
+  const isCorrect = q.en.some(acc => normalize(acc) === userAnswer || toCanonical(normalize(acc)) === userCanonical);
+
+  answered = true;
+  answerInput.readOnly = true;
+  skipBtn.style.display = "none";
+  checkBtn.textContent = idx === order.length - 1 ? "결과 보기" : "다음 문제";
+
+  if (isCorrect && userAnswer.length > 0) {
+    score++;
+    feedback.className = "feedback show correct";
+    feedback.innerHTML = `✓ 정답입니다!<div class="answer-line">모범 답안: <b>${q.en[0]}</b></div>`;
+  } else {
+    wrongQuestions.push(q);
+    feedback.className = "feedback show wrong";
+    const userTokens = userAnswer.split(" ").filter(Boolean);
+    const { answer: bestAnswer, info } = pickClosestAnswer(q.en, userTokens);
+    const correctionHtml = info ? buildCorrectionHtml(info.ops) : "";
+    feedback.innerHTML = `✗ 오답입니다.<div class="answer-line">모범 답안: <b>${bestAnswer}</b></div>${correctionHtml}`;
+  }
+  scoreText.textContent = `맞은 개수: ${score}`;
+}
+
+function nextQuestion() {
+  idx++;
+  if (idx >= order.length) {
+    showSummary();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showSummary() {
+  quizCard.style.display = "none";
+  metaRow.style.display = "none";
+  progressBar.style.display = "none";
+  summaryCard.style.display = "block";
+  finalScore.textContent = `${score} / ${order.length}`;
+  const pct = Math.round((score / order.length) * 100);
+  let msg = "조금 더 연습해봐요!";
+  if (pct >= 90) msg = "완벽해요! 대단합니다.";
+  else if (pct >= 70) msg = "아주 잘했어요!";
+  else if (pct >= 50) msg = "좋아요, 계속 연습해봐요!";
+  finalMsg.textContent = msg;
+
+  if (wrongQuestions.length > 0) {
+    reviewWrongBtn.style.display = "block";
+    reviewWrongBtn.textContent = `틀린 문제만 다시 풀기 (${wrongQuestions.length}개)`;
+  } else {
+    reviewWrongBtn.style.display = "none";
+  }
+}
+
+function backToSetup() {
+  summaryCard.style.display = "none";
+  quizCard.style.display = "none";
+  metaRow.style.display = "none";
+  progressBar.style.display = "none";
+  setupCard.style.display = "block";
+  renderSetup();
+}
+
+startBtn.addEventListener("click", startQuiz);
+
+checkBtn.addEventListener("click", () => {
+  if (!answered) {
+    checkAnswer();
+  } else {
+    nextQuestion();
+  }
+});
+
+skipBtn.addEventListener("click", () => {
+  feedback.className = "feedback show wrong";
+  feedback.innerHTML = `건너뛰었습니다.<div class="answer-line">모범 답안: <b>${order[idx].en[0]}</b></div>`;
+  answerInput.readOnly = true;
+  answered = true;
+  wrongQuestions.push(order[idx]);
+  skipBtn.style.display = "none";
+  checkBtn.textContent = idx === order.length - 1 ? "결과 보기" : "다음 문제";
+});
+
+answerInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    if (!answered) {
+      checkAnswer();
+    } else {
+      nextQuestion();
+    }
+  }
+});
+
+restartBtn.addEventListener("click", backToSetup);
+reviewWrongBtn.addEventListener("click", reviewWrongOnly);
+mySentencesBtn.addEventListener("click", () => selectTest("my_sentences"));
+monthABtn.addEventListener("click", showTestsA);
+monthBBtn.addEventListener("click", showTestsB);
+backFromA.addEventListener("click", showMonthSelect);
+backFromB.addEventListener("click", showMonthSelect);
+backFromCategoryB.addEventListener("click", showTestsB);
+testVocabBtn.addEventListener("click", () => selectTest("vocab"));
+testWhBtn.addEventListener("click", () => selectTest("wh"));
+testBeverbBtn.addEventListener("click", () => selectTest("beverb"));
+testBVocabBtn.addEventListener("click", showCategoryB);
+testLessonBtn.addEventListener("click", showLessonCategory);
+catFeelingBtn.addEventListener("click", () => selectTest("b_feeling"));
+catFoodBtn.addEventListener("click", () => selectTest("b_food"));
+catPlansBtn.addEventListener("click", () => selectTest("b_plans"));
+catWeatherBtn.addEventListener("click", () => selectTest("b_weather"));
+catSnsBtn.addEventListener("click", () => selectTest("b_sns"));
+catAllBtn.addEventListener("click", () => selectTest("b_all"));
+backFromLessonCategory.addEventListener("click", showTestsB);
+lesson1Btn.addEventListener("click", () => selectTest("b_lesson1"));
+lesson2Btn.addEventListener("click", () => selectTest("b_lesson2"));
+lesson3Btn.addEventListener("click", () => selectTest("b_lesson3"));
+lessonAllBtn.addEventListener("click", () => selectTest("b_lesson_all"));
+goHomeBtn.addEventListener("click", goHome);
+</script>
+</body>
+</html>
