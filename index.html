@@ -1278,9 +1278,27 @@ const MY_QUESTIONS = [
   { kr: "비가 진짜 세게 오기 시작했고, 지금 바람도 미쳤어. 나 완전 다 젖었어. 네 말 들을 걸 그랬어.", en: ["it started raining really heavily, and the wind is crazy right now. i'm totally soaked. i should've listened to you.", "it started raining really heavily and the wind is crazy right now i'm totally soaked i should have listened to you"] },
 ];
 
+// Words people commonly type without the apostrophe (dont, cant, im...) —
+// restore the apostrophe first so expandContractions below still catches them.
+const APOSTROPHE_LESS = {
+  dont: "don't", cant: "can't", wont: "won't", shant: "shan't",
+  isnt: "isn't", arent: "aren't", wasnt: "wasn't", werent: "weren't",
+  doesnt: "doesn't", didnt: "didn't", havent: "haven't", hasnt: "hasn't",
+  hadnt: "hadn't", wouldnt: "wouldn't", shouldnt: "shouldn't", couldnt: "couldn't",
+  im: "i'm", youre: "you're", theyre: "they're",
+  ive: "i've", youve: "you've", weve: "we've", theyve: "they've",
+  youll: "you'll", theyll: "they'll", itll: "it'll",
+  lets: "let's", thats: "that's", whats: "what's", whos: "who's",
+  wheres: "where's", whens: "when's", whys: "why's", hows: "how's",
+  theres: "there's", heres: "here's"
+};
+function restoreApostrophes(s) {
+  return s.replace(/\b[a-z]+\b/g, w => APOSTROPHE_LESS[w] || w);
+}
+
 // Expand contractions to full form so "it's"/"it is", "don't"/"do not" etc. always match.
 function expandContractions(s) {
-  return s
+  return restoreApostrophes(s)
     .replace(/\bwon't\b/g, "will not")
     .replace(/\bcan't\b/g, "can not")
     .replace(/\bshan't\b/g, "shall not")
