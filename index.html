@@ -1469,8 +1469,8 @@ const MY2_QUESTIONS = [
   { kr: "나 역까지 데려다줄 수 있어?", en: ["would you be able to drop me off at the subway station", "i was wondering if you could drop me off at the subway station", "could you possibly drop me off at the station"] },
   { kr: "누가 오늘 너를 차로 데려다줬어?", en: ["who dropped you off today"] },
   { kr: "오늘 아침에 너를 차로 데려다준 사람은 누구야?", en: ["who's the person who dropped you off this morning", "who is the person who dropped you off this morning", "who's the guy who dropped you off this morning", "who is the guy who dropped you off this morning"] },
-  { kr: "나 오늘 너를 차로 직장까지 데려다줄 수 있어.", en: ["i can give you a lift to work today"] },
-  { kr: "네 남자친구한테 우리를 공항까지 데려다달라고 부탁해봐.", en: ["you could have your boyfriend give us a lift to the airport"] },
+  { kr: "나 오늘 너를 차로 직장까지 태워다줄 수 있어.", en: ["i can give you a lift to work today"] },
+  { kr: "네 남자친구한테 우리를 공항까지 태워달라고 부탁해봐.", en: ["you could have your boyfriend give us a lift to the airport"] },
   { kr: "오늘 나를 차로 직장까지 태워다줄 수 있어?", en: ["could you possibly give me a lift to work today"] },
   { kr: "그는 항상 출근하는 길에 여자친구를 직장까지 태워다줘.", en: ["he always gives his girlfriend a lift to work on his way to work"] },
   { kr: "보통 누가 너를 태워다줘?", en: ["who usually gives you a ride"] },
@@ -1494,7 +1494,9 @@ const APOSTROPHE_LESS = {
   hadnt: "hadn't", wouldnt: "wouldn't", shouldnt: "shouldn't", couldnt: "couldn't",
   im: "i'm", youre: "you're", theyre: "they're",
   ive: "i've", youve: "you've", weve: "we've", theyve: "they've",
-  youll: "you'll", theyll: "they'll", itll: "it'll",
+  shouldve: "should've", wouldve: "would've", couldve: "could've",
+  mustve: "must've", mightve: "might've",
+  youll: "you'll", theyll: "they'll", itll: "it'll", wholl: "who'll", thatll: "that'll",
   lets: "let's", thats: "that's", whats: "what's", whos: "who's",
   wheres: "where's", whens: "when's", whys: "why's", hows: "how's",
   theres: "there's", heres: "here's"
@@ -1513,8 +1515,8 @@ function expandContractions(s) {
     .replace(/\b(it|that|this|what|who|where|when|why|how|there|he|she|here)'s\b/g, "$1 is")
     .replace(/\b(you|we|they)'re\b/g, "$1 are")
     .replace(/\bi'm\b/g, "i am")
-    .replace(/\b(i|you|we|they)'ve\b/g, "$1 have")
-    .replace(/\b(i|you|we|they|it|he|she)'ll\b/g, "$1 will")
+    .replace(/\b(\w+)'ve\b/g, "$1 have")
+    .replace(/\b(\w+)'ll\b/g, "$1 will")
     .replace(/\blet's\b/g, "let us")
     .replace(/\b(\w+)'d\b/g, "$1 would");
 }
@@ -1527,6 +1529,7 @@ function normalize(s) {
 
 // Groups of interchangeable words — swapping within a group still counts as correct.
 const SYNONYM_GROUPS = [
+  ["lift", "ride"],
   ["angry", "mad", "upset", "furious", "annoyed"],
   ["sad", "unhappy", "down", "blue"],
   ["happy", "glad", "pleased"],
