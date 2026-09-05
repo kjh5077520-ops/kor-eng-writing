@@ -1884,7 +1884,8 @@ SYNONYM_GROUPS.forEach(group => {
 function expandShortcuts(str) {
   return str
     .replace(/\bgoing to\b/g, "gonna")
-    .replace(/\bwant to\b/g, "wanna");
+    .replace(/\bwant to\b/g, "wanna")
+    .replace(/\b(have|has|had) to\b/g, "gotta");
 }
 
 // Filler/hedge words that don't change the core meaning — ignored on both sides
