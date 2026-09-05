@@ -322,28 +322,130 @@
   </header>
 
   <div class="card" id="screenMonth">
-    <div class="prompt-label">월 선택</div>
-    <button class="test-card-btn" id="mySentencesBtn" type="button">
+    <div class="prompt-label">레벨 선택</div>
+    <button class="test-card-btn" id="beginnerLevelBtn" type="button">
+      <div class="test-title">초급반</div>
+      <div class="test-desc">A · B</div>
+    </button>
+    <button class="test-card-btn" id="intermediateLevelBtn" type="button">
+      <div class="test-title">중급반</div>
+      <div class="test-desc">A</div>
+    </button>
+    <button class="test-card-btn" id="myLevelBtn" type="button">
       <div class="test-title">내 문장</div>
-      <div class="test-desc">내가 추가한 문장 모음 172문제</div>
+      <div class="test-desc">V.1 · V.2</div>
     </button>
-    <button class="test-card-btn" id="mySentences2Btn" type="button">
-      <div class="test-title">내 문장 2</div>
-      <div class="test-desc">가정법 · 진심이야 · TV 시리즈 · 데려다주다 51문제</div>
-    </button>
-    <button class="test-card-btn" id="monthABtn" type="button">
-      <div class="test-title">A달</div>
+  </div>
+
+  <div class="card" id="screenBeginner" style="display:none;">
+    <button class="btn-secondary back-btn" id="backFromBeginner" type="button">← 처음으로</button>
+    <div class="prompt-label">초급반 선택</div>
+    <button class="test-card-btn" id="beginnerABtn" type="button">
+      <div class="test-title">A</div>
       <div class="test-desc">초급 보카 회화 테스트 · 의문사 영작 · Be동사 문장 연습</div>
     </button>
-    <button class="test-card-btn" id="monthBBtn" type="button">
-      <div class="test-title">B달</div>
+    <button class="test-card-btn" id="beginnerBBtn" type="button">
+      <div class="test-title">B</div>
       <div class="test-desc">초급 보카 회화 테스트 · 수업 문장</div>
     </button>
   </div>
 
+  <div class="card" id="screenIntermediate" style="display:none;">
+    <button class="btn-secondary back-btn" id="backFromIntermediate" type="button">← 처음으로</button>
+    <div class="prompt-label">중급반 선택</div>
+    <button class="test-card-btn" id="intermediateABtn" type="button">
+      <div class="test-title">A</div>
+      <div class="test-desc">단어 100문제 · 수업 문장 75문제</div>
+    </button>
+  </div>
+
+  <div class="card" id="screenIntermediateA" style="display:none;">
+    <button class="btn-secondary back-btn" id="backFromIntermediateA" type="button">← 중급반으로</button>
+    <div class="prompt-label">중급반 A · 테스트 선택</div>
+    <button class="test-card-btn" id="midVocabBtn" type="button">
+      <div class="test-title">단어</div>
+      <div class="test-desc">학습 · 반응 · 집안일 · 식당 100문제</div>
+    </button>
+    <button class="test-card-btn" id="midLessonBtn" type="button">
+      <div class="test-title">수업 문장</div>
+      <div class="test-desc">1~6과 챕터별 / 전체 75문제</div>
+    </button>
+  </div>
+
+  <div class="card" id="screenIntermediateVocabCategory" style="display:none;">
+    <button class="btn-secondary back-btn" id="backFromIntermediateVocab" type="button">← 중급반 A로</button>
+    <div class="prompt-label">중급반 A · 단어 · 카테고리 선택</div>
+    <button class="test-card-btn" id="midLearningBtn" type="button">
+      <div class="test-title">학습</div>
+      <div class="test-desc">학습 표현 25문제</div>
+    </button>
+    <button class="test-card-btn" id="midReactionBtn" type="button">
+      <div class="test-title">반응</div>
+      <div class="test-desc">반응 표현 25문제</div>
+    </button>
+    <button class="test-card-btn" id="midHouseworkBtn" type="button">
+      <div class="test-title">집안일</div>
+      <div class="test-desc">집안일 표현 25문제</div>
+    </button>
+    <button class="test-card-btn" id="midRestaurantBtn" type="button">
+      <div class="test-title">식당</div>
+      <div class="test-desc">식당 표현 25문제</div>
+    </button>
+    <button class="test-card-btn" id="midVocabAllBtn" type="button">
+      <div class="test-title">전체 (All)</div>
+      <div class="test-desc">학습 · 반응 · 집안일 · 식당 100문제</div>
+    </button>
+  </div>
+
+  <div class="card" id="screenIntermediateLessonCategory" style="display:none;">
+    <button class="btn-secondary back-btn" id="backFromIntermediateLesson" type="button">← 중급반 A로</button>
+    <div class="prompt-label">중급반 A · 수업 문장 · 챕터 선택</div>
+    <button class="test-card-btn" id="midLesson1Btn" type="button">
+      <div class="test-title">수업 1</div>
+      <div class="test-desc">1과 13문제</div>
+    </button>
+    <button class="test-card-btn" id="midLesson2Btn" type="button">
+      <div class="test-title">수업 2</div>
+      <div class="test-desc">2과 15문제</div>
+    </button>
+    <button class="test-card-btn" id="midLesson3Btn" type="button">
+      <div class="test-title">수업 3</div>
+      <div class="test-desc">3과 13문제</div>
+    </button>
+    <button class="test-card-btn" id="midLesson4Btn" type="button">
+      <div class="test-title">수업 4</div>
+      <div class="test-desc">4과 12문제</div>
+    </button>
+    <button class="test-card-btn" id="midLesson5Btn" type="button">
+      <div class="test-title">수업 5</div>
+      <div class="test-desc">5과 10문제</div>
+    </button>
+    <button class="test-card-btn" id="midLesson6Btn" type="button">
+      <div class="test-title">수업 6</div>
+      <div class="test-desc">6과 12문제</div>
+    </button>
+    <button class="test-card-btn" id="midLessonAllBtn" type="button">
+      <div class="test-title">전체 (All)</div>
+      <div class="test-desc">1~6과 전체 75문제</div>
+    </button>
+  </div>
+
+  <div class="card" id="screenMySentencesVersion" style="display:none;">
+    <button class="btn-secondary back-btn" id="backFromMySentencesVersion" type="button">← 처음으로</button>
+    <div class="prompt-label">내 문장 · 버전 선택</div>
+    <button class="test-card-btn" id="mySentencesV1Btn" type="button">
+      <div class="test-title">V.1</div>
+      <div class="test-desc">내가 추가한 문장 모음 172문제</div>
+    </button>
+    <button class="test-card-btn" id="mySentencesV2Btn" type="button">
+      <div class="test-title">V.2</div>
+      <div class="test-desc">가정법 · 진심이야 · TV 시리즈 · 데려다주다 51문제</div>
+    </button>
+  </div>
+
   <div class="card" id="screenTestsA" style="display:none;">
-    <button class="btn-secondary back-btn" id="backFromA" type="button">← 처음으로</button>
-    <div class="prompt-label">A달 · 테스트 선택</div>
+    <button class="btn-secondary back-btn" id="backFromA" type="button">← 초급반으로</button>
+    <div class="prompt-label">초급반 A · 테스트 선택</div>
     <button class="test-card-btn" id="testVocabBtn" type="button">
       <div class="test-title">초급 보카 회화 테스트</div>
       <div class="test-desc">집 · 잠 · 만남 · 여행 · 육아 실생활 표현 103문제</div>
@@ -359,8 +461,8 @@
   </div>
 
   <div class="card" id="screenTestsB" style="display:none;">
-    <button class="btn-secondary back-btn" id="backFromB" type="button">← 처음으로</button>
-    <div class="prompt-label">B달 · 테스트 선택</div>
+    <button class="btn-secondary back-btn" id="backFromB" type="button">← 초급반으로</button>
+    <div class="prompt-label">초급반 B · 테스트 선택</div>
     <button class="test-card-btn" id="testBVocabBtn" type="button">
       <div class="test-title">초급 보카 회화 테스트</div>
       <div class="test-desc">감정 · 음식 · 약속 · 날씨 · 줄임말 100문제</div>
@@ -372,8 +474,8 @@
   </div>
 
   <div class="card" id="screenCategoryB" style="display:none;">
-    <button class="btn-secondary back-btn" id="backFromCategoryB" type="button">← B달로</button>
-    <div class="prompt-label">B달 · 초급 보카 회화 테스트 · 카테고리 선택</div>
+    <button class="btn-secondary back-btn" id="backFromCategoryB" type="button">← 초급반 B로</button>
+    <div class="prompt-label">초급반 B · 초급 보카 회화 테스트 · 카테고리 선택</div>
     <button class="test-card-btn" id="catFeelingBtn" type="button">
       <div class="test-title">감정</div>
       <div class="test-desc">감정 표현 20문제</div>
@@ -401,8 +503,8 @@
   </div>
 
   <div class="card" id="screenLessonCategory" style="display:none;">
-    <button class="btn-secondary back-btn" id="backFromLessonCategory" type="button">← B달로</button>
-    <div class="prompt-label">B달 · 수업 문장 · 챕터 선택</div>
+    <button class="btn-secondary back-btn" id="backFromLessonCategory" type="button">← 초급반 B로</button>
+    <div class="prompt-label">초급반 B · 수업 문장 · 챕터 선택</div>
     <button class="test-card-btn" id="lesson1Btn" type="button">
       <div class="test-title">수업 1</div>
       <div class="test-desc">1과 빈도부사 문장 12문제</div>
@@ -1485,6 +1587,211 @@ const MY2_QUESTIONS = [
   { kr: "남자친구가 나와 이야기하면서 집까지 걸어다줄 때가 정말 좋아.", en: ["i really love it when my boyfriend walks me home while we talk"] },
 ];
 
+const MID_LEARNING_QUESTIONS = [
+  { kr: "다음 달 수강 신청했어.", en: ["i signed up for next month's class"] },
+  { kr: "난 항상 숙제를 미뤄.", en: ["i always put off my homework"] },
+  { kr: "수업에 못 갈 것 같아요.", en: ["i don't think i can make it to class", "i do not think i can make it to class"] },
+  { kr: "저 수업이 밀렸어요.", en: ["i'm behind on my classes", "i am behind on my classes"] },
+  { kr: "지난 수업 복습했어.", en: ["i reviewed the last class"] },
+  { kr: "난 항상 필기를 해.", en: ["i always take notes"] },
+  { kr: "난 문법 공부를 더 해야 해.", en: ["i need to work on my grammar"] },
+  { kr: "나 오늘 10문장 외웠어.", en: ["i memorized ten sentences today", "i memorized 10 sentences today"] },
+  { kr: "나 밀린 수업 들어야 해.", en: ["i have to catch up on my classes"] },
+  { kr: "난 온라인 수업을 듣고 있어.", en: ["i'm taking an online class", "i am taking an online class"] },
+  { kr: "숙제 언제까지 내야 해요?", en: ["when is the homework due"] },
+  { kr: "숙제 제출하는 걸 깜빡했어요.", en: ["i forgot to submit my homework"] },
+  { kr: "좋은 성적을 받았어.", en: ["i got a good grade"] },
+  { kr: "적절한 단어가 안 떠올라.", en: ["i can't think of the right word", "i cannot think of the right word"] },
+  { kr: "난 문법을 잘 못해.", en: ["i'm not good at grammar", "i am not good at grammar"] },
+  { kr: "영어로 말할 때 버벅거려요.", en: ["i get stuck when i speak english"] },
+  { kr: "듣기가 어려워요.", en: ["i struggle with listening"] },
+  { kr: "나 수업에 빠졌어.", en: ["i missed a class"] },
+  { kr: "유용한 표현들을 좀 배웠어.", en: ["i learned some useful expressions"] },
+  { kr: "말하기 실력을 늘리고 싶어.", en: ["i want to improve my speaking skills"] },
+  { kr: "이제 어떻게 하는지 알았어요!", en: ["i got the hang of it"] },
+  { kr: "그거 생각날 듯 말 듯해.", en: ["it's on the tip of my tongue", "it is on the tip of my tongue"] },
+  { kr: "나 밤새 공부했어.", en: ["i pulled an all-nighter", "i pulled an all nighter"] },
+  { kr: "나 원어민 앞에서 굳어버려.", en: ["i freeze up around native speakers"] },
+  { kr: "연습이 완벽을 만들어요.", en: ["practice makes perfect"] },
+];
+
+const MID_REACTION_QUESTIONS = [
+  { kr: "나도 그런 적 있어.", en: ["i've been there", "i have been there"] },
+  { kr: "네 기분 알아.", en: ["i know how you feel"] },
+  { kr: "안됐다. (유감이야)", en: ["i'm sorry to hear that", "i am sorry to hear that"] },
+  { kr: "나도 그렇게 생각해.", en: ["i think so, too", "i think so too"] },
+  { kr: "그거 재밌겠다!", en: ["that sounds fun"] },
+  { kr: "나도 공감해.", en: ["i can relate to that"] },
+  { kr: "네가 왜 그러는지 알아.", en: ["i know where you're coming from", "i know where you are coming from"] },
+  { kr: "완전 동의해!", en: ["i couldn't agree more", "i could not agree more"] },
+  { kr: "내 말이 그 말이야!", en: ["that's exactly what i'm saying", "that is exactly what i am saying"] },
+  { kr: "힘들겠다.", en: ["that must be hard"] },
+  { kr: "말도 안 돼!!", en: ["no way", "you gotta be kidding me", "shut up"] },
+  { kr: "미쳤다!", en: ["that's crazy", "that is crazy"] },
+  { kr: "잘됐다.", en: ["good for you"] },
+  { kr: "신나겠다.", en: ["that's exciting", "that is exciting"] },
+  { kr: "좋은 생각이야.", en: ["sounds good"] },
+  { kr: "넘 아쉽다.", en: ["that's too bad", "that is too bad"] },
+  { kr: "나도 그래.", en: ["same here"] },
+  { kr: "그러게 말이야.", en: ["tell me about it"] },
+  { kr: "그럴 수도 있지.", en: ["it happens"] },
+  { kr: "어쩔 수 없지.", en: ["it is what it is"] },
+  { kr: "큰일 해냈네!", en: ["that's huge", "that is huge"] },
+  { kr: "괜히 신경 쓰지 마.", en: ["don't sweat it", "do not sweat it"] },
+  { kr: "짜증나겠다.", en: ["that sucks"] },
+  { kr: "완전 맞아!", en: ["100%", "100 percent"] },
+  { kr: "네가 정말 자랑스러워!", en: ["i'm so proud of you", "i am so proud of you"] },
+];
+
+const MID_HOUSEWORK_QUESTIONS = [
+  { kr: "너 설거지 했어?", en: ["did you do the dishes"] },
+  { kr: "나 빨래 좀 하러 갈게.", en: ["i'm gonna go do the laundry", "i am gonna go do the laundry"] },
+  { kr: "나 오늘 집 청소했어.", en: ["i cleaned the house today"] },
+  { kr: "애들 나가고 집 정리했어.", en: ["i tidied up the house after the kids left"] },
+  { kr: "거실에 청소기 좀 돌려줄래?", en: ["can you vacuum the living room"] },
+  { kr: "우리 아이들이 오늘 엄청 어질러놨어.", en: ["my kids made a huge mess today"] },
+  { kr: "쓰레기 좀 버려줄 수 있어?", en: ["can you take out the trash"] },
+  { kr: "음식물 쓰레기 깜빡했다!", en: ["i forgot the food waste"] },
+  { kr: "내가 식탁 닦을게.", en: ["i'll wipe down the table", "i will wipe down the table"] },
+  { kr: "나 우선 애들 밥 먹여야 해.", en: ["i need to feed the kids first"] },
+  { kr: "난 하루에 두 번 강아지 산책시켜.", en: ["i walk my dog twice a day"] },
+  { kr: "오늘 장 보러 갈래?", en: ["do you want to go grocery shopping today"] },
+  { kr: "방금 바닥 닦았어.", en: ["i just mopped the floor"] },
+  { kr: "그 옷 주워.", en: ["pick up the clothes"] },
+  { kr: "너는 네 옷을 아무 데나 두잖아!", en: ["you leave your clothes everywhere"] },
+  { kr: "장난감 치워.", en: ["put your toys away"] },
+  { kr: "화분에 물 주는 거 깜빡했어.", en: ["i forgot to water the plants"] },
+  { kr: "집 환기 좀 시키려고 창문 열었어.", en: ["i opened the window to air out the house"] },
+  { kr: "화장실에 곰팡이 꼈어.", en: ["the bathroom got moldy"] },
+  { kr: "배수구가 막힌 것 같아.", en: ["i think the drain is clogged"] },
+  { kr: "항상 할 게 있어.", en: ["there's always something to do", "there is always something to do"] },
+  { kr: "집안일은 끝이 없어.", en: ["the housework never ends"] },
+  { kr: "산더미처럼 쌓인 빨래.", en: ["a pile of laundry"] },
+  { kr: "빨래할 게 산더미 같아.", en: ["i have a pile of laundry to do"] },
+  { kr: "전업주부", en: ["a stay-at-home mom", "a stay at home mom"] },
+];
+
+const MID_RESTAURANT_QUESTIONS = [
+  { kr: "두 명 자리 있나요?", en: ["do you have a table for two"] },
+  { kr: "밖에 앉을 수 있나요?", en: ["can we sit outside"] },
+  { kr: "포크를 떨어뜨렸어요.", en: ["i dropped the fork"] },
+  { kr: "물티슈 있나요?", en: ["do you have wet wipes"] },
+  { kr: "후추 좀 줄 수 있어?", en: ["can you pass the pepper"] },
+  { kr: "소스 좀 더 받을 수 있나요?", en: ["can we get some more sauce"] },
+  { kr: "양파는 빼주실 수 있나요?", en: ["can you leave out the onions"] },
+  { kr: "저는 피자로 할게요.", en: ["i'll go with the pizza", "i will go with the pizza"] },
+  { kr: "밥도 같이 나오나요?", en: ["does it come with rice"] },
+  { kr: "소스는 따로 받을 수 있나요?", en: ["can i get the sauce on the side"] },
+  { kr: "저 땅콩 알레르기가 있어서요.", en: ["i'm allergic to peanuts", "i am allergic to peanuts"] },
+  { kr: "제 콜라 좀 리필 받을 수 있나요?", en: ["can i get a refill on my coke"] },
+  { kr: "제 커피에 얼음 좀 넣어 주실 수 있나요?", en: ["can you add ice to my coffee"] },
+  { kr: "아보카도 더 받을 수 있나요?", en: ["can i get extra avocado"] },
+  { kr: "그거 좀 덜 맵게 해주실 수 있나요?", en: ["can you make it less spicy"] },
+  { kr: "나머지 포장해 주실 수 있나요?", en: ["can i get the rest to go"] },
+  { kr: "그거 와인하고 잘 어울려.", en: ["it goes well with wine"] },
+  { kr: "계산서 좀 받을 수 있나요?", en: ["can we get the check"] },
+  { kr: "야외 좌석 있나요?", en: ["do you have outdoor seating"] },
+  { kr: "대기가 얼마나 되나요?", en: ["how long is the wait"] },
+  { kr: "그거 서비스예요.", en: ["it's on the house", "it is on the house"] },
+  { kr: "저희 그거 아직 먹고 있어요.", en: ["we're still working on it", "we are still working on it"] },
+  { kr: "지금은 일단 괜찮아요.", en: ["we're good for now", "we are good for now"] },
+  { kr: "저도 같은 걸로 할게요.", en: ["i'll have the same thing", "i will have the same thing"] },
+  { kr: "이거 추가 요금 있나요?", en: ["is this extra"] },
+];
+
+const MID_LESSON1_QUESTIONS = [
+  { kr: "내 수업 막 시작하려고 해. 나중에 얘기하자!", en: ["my class is about to start talk to you later"] },
+  { kr: "A: 너 뭐해? B: 나 막 자려고 하는데.. 왜?", en: ["what are you doing i'm about to go to bed why", "what are you doing i am about to go to bed why", "what are you doing i'm about to go to sleep why"] },
+  { kr: "내 말이 그 말이야!! 내가 딱 그 말하려고 했는데!", en: ["that's what i'm saying i was just about to say that", "that is what i am saying i was just about to say that"] },
+  { kr: "A: 너 막 뭐 말하려고 했어? B: 아니, 암것도 아냐. 신경 쓰지마", en: ["what were you about to say no it's nothing never mind", "what were you about to say no it is nothing never mind"] },
+  { kr: "지금 내가 하려는 말이 좀 세게 들릴 수도 있는데, 근데..", en: ["what i'm about to say may sound a bit harsh but", "what i am about to say may sound a bit harsh but"] },
+  { kr: "너 머리 묶으니까 달라 보여. (너 머리 푸니까 달라 보여)", en: ["you look different with your hair tied up", "you look different with your hair down"] },
+  { kr: "그녀는 화장 안 한 게 훨씬 나 보여.", en: ["she looks much better without makeup"] },
+  { kr: "그는 (그의) 나이보다 더 어려 보여.", en: ["he looks younger than his age"] },
+  { kr: "비가 올 것처럼 보여. 우리 우산 가져가야 될 것 같아.", en: ["it looks like it's going to rain i think we should take an umbrella", "it looks like it is going to rain i think we should take an umbrella"] },
+  { kr: "웨이팅이 길어 보여… 너 원하면 우리 다른 데로 가도 돼.", en: ["it looks like there's a long wait we can go somewhere else if you want", "it looks like there is a long wait we can go somewhere else if you want"] },
+  { kr: "감자튀김이 같이 나오는 것 같아.", en: ["it looks like it comes with fries"] },
+  { kr: "다들 치즈버거 시키는 것 같아.", en: ["it looks like everyone's ordering the cheeseburger", "it looks like everyone is ordering the cheeseburger"] },
+  { kr: "숙제에 정성을(노력을) 많이 들인 것 같아요!", en: ["it looks like you put a lot of effort into your homework"] },
+];
+
+const MID_LESSON2_QUESTIONS = [
+  { kr: "나 영어 수업을 한 6개월째 듣고 있거든..", en: ["i've been taking english classes for about six months", "i have been taking english classes for about six months"] },
+  { kr: "나 요즘 커피 줄이려고 하고 있어.", en: ["i've been trying to cut back on coffee", "i have been trying to cut back on coffee"] },
+  { kr: "나 학교 잠시 쉴까 생각 중이야. (일 잠시 쉴까 생각 중이야)", en: ["i've been thinking about taking some time off from school", "i have been thinking about taking some time off from school", "i've been thinking about taking some time off from work", "i have been thinking about taking some time off from work"] },
+  { kr: "한국 음식 얘기 나와서 말인데, 나 요즘 떡볶이가 땡겼어.", en: ["speaking of korean food, i've been craving tteokbokki these days", "speaking of korean food i've been craving tteokbokki these days", "speaking of korean food, i have been craving tteokbokki these days"] },
+  { kr: "지난 몇 주 동안 정말 피곤하게 느껴졌어.", en: ["i've been feeling really tired for the last couple of weeks", "i have been feeling really tired for the last couple of weeks"] },
+  { kr: "우리 이제 한 3년째 만나고 있어.", en: ["we've been dating for about three years", "we have been dating for about three years", "we've been dating for about three years now"] },
+  { kr: "영어 공부한 지 얼마나 됐어?", en: ["how long have you been studying english"] },
+  { kr: "이 수업 들은 지 얼마나 됐어요?", en: ["how long have you been taking this class"] },
+  { kr: "거기서 일한 지 얼마나 됐어?", en: ["how long have you been working there"] },
+  { kr: "여기서 산 지 얼마나 됐어요?", en: ["how long have you been living here"] },
+  { kr: "그걸 전에 해본 적이 없어서 정말 긴장했었어.", en: ["i was really nervous because i hadn't done it before", "i was really nervous because i had not done it before"] },
+  { kr: "내 친구가 이미 그 영화를 봐서, 우리 딴 거 봤어.", en: ["my friend had already seen that movie, so we watched something else", "my friend had already seen that movie so we watched something else"] },
+  { kr: "버스에 올라타고 깨달았어 내가 버스를 잘못 탔다는 걸.", en: ["i got on the bus and realized i had taken the wrong bus"] },
+  { kr: "집에 오고 깨달았어 내가 그 카페에 내 충전기를 두고 왔다는 걸.", en: ["i got home and realized i had left my charger at the cafe"] },
+  { kr: "내가 거기 도착했을 때, 수업은 이미 시작됐었어.", en: ["when i got there, the class had already started", "when i got there the class had already started"] },
+];
+
+const MID_LESSON3_QUESTIONS = [
+  { kr: "너 태국에 있다고 했지..?", en: ["you said that you were in thailand, right", "you said that you were in thailand right"] },
+  { kr: "그녀는 오늘 아침에 피곤하다고 했어.", en: ["she said that she was tired this morning"] },
+  { kr: "그녀는 오늘 늦을 수도 있다고 했어.", en: ["she said that she might be late today"] },
+  { kr: "그는 오늘 컨디션이 안 좋다고 했어.", en: ["he said that he didn't feel well today", "he said that he did not feel well today", "he said that he wasn't feeling well today", "he said that he was not feeling well today"] },
+  { kr: "내 친구가 그 영화 볼 만하다고 했어.", en: ["my friend said that the movie was worth watching", "my friend said that the movie is worth watching"] },
+  { kr: "내 직장동료가 여기 버거 엄청 맛있다고 했어.", en: ["my coworker said that the burgers here are amazing", "my coworker said that the burgers here were amazing"] },
+  { kr: "저희 호텔에 직원이 여기 디저트가 엄청 맛있다고 했어요.", en: ["the staff at our hotel said that the desserts here are amazing", "the staff at our hotel said that the desserts here were amazing"] },
+  { kr: "그가 그 프로그램을 전에 써본 적이 없다고 했어요.", en: ["he said that he had never used that program before", "he said that he had never used the program before"] },
+  { kr: "그들이 우리에게 2층으로 가라고 했어.", en: ["they told us to go to the second floor", "they said that we should go to the second floor"] },
+  { kr: "그거 하라고 말한 거 너잖아.", en: ["you're the one who told me to do it", "you are the one who told me to do it", "you're the one that told me to do it"] },
+  { kr: "엄마가 오늘 집에 일찍 오라고 했어.", en: ["my mom told me to come home early today"] },
+  { kr: "의사가 찬 건 아무것도 먹지 말라고 했어.", en: ["the doctor told me not to eat anything cold", "my doctor told me not to eat anything cold"] },
+  { kr: "내 친구가 선물 아무것도 가져오지 말라고 했어.", en: ["my friend told me not to bring any gifts"] },
+];
+
+const MID_LESSON4_QUESTIONS = [
+  { kr: "나 오늘 헬스장 가기로 되어 있어.", en: ["i'm supposed to go to the gym today", "i am supposed to go to the gym today"] },
+  { kr: "나 내일 야간 근무하기로 되어 있어.", en: ["i'm supposed to work the night shift tomorrow", "i am supposed to work the night shift tomorrow"] },
+  { kr: "A: 너 토요일에 뭐해? B: 음, 나 그 날 가족하고 저녁 먹기로 되어 있어.", en: ["what are you doing on saturday well i'm supposed to have dinner with my family that day", "what are you doing on saturday well i am supposed to have dinner with my family that day"] },
+  { kr: "나 7시에 어디 가기로 되어 있는데, 그 전에는 시간 돼.", en: ["i'm supposed to be somewhere at 7, but i'm free before that", "i am supposed to be somewhere at 7 but i am free before that"] },
+  { kr: "나 지금 공부하고 있어야 하는데ㅠㅠㅠ… 이거 보는 걸 멈출 수가 없잖아!!", en: ["i'm supposed to be studying right now but i can't stop watching this", "i am supposed to be studying right now but i cannot stop watching this"] },
+  { kr: "너 그거 만지면 안 돼.", en: ["you're not supposed to touch that", "you are not supposed to touch that"] },
+  { kr: "너 여기 있으면 (원래) 안 돼.", en: ["you're not supposed to be here", "you are not supposed to be here"] },
+  { kr: "나 이제 어떡해?", en: ["what am i supposed to do now"] },
+  { kr: "A: 그 영화 어땠어? B: 좋았어. 완전 볼 만해!", en: ["how was the movie it was great it's definitely worth watching", "how was the movie it was great it is definitely worth watching"] },
+  { kr: "A: 그 영화 어땠어? B: 볼 가치가 없었어. 솔직히, 약간 실망스러웠어.", en: ["how was the movie it wasn't worth watching to be honest it was kind of disappointing", "how was the movie it was not worth watching to be honest it was kind of disappointing"] },
+  { kr: "그거 확인해보는 게 좋을 지도 몰라. (한 번 확인해 볼 가치가 있어)", en: ["it might be worth checking out"] },
+  { kr: "(그거) 시도해 볼만하지 않을까?", en: ["isn't that worth trying", "is not that worth trying"] },
+];
+
+const MID_LESSON5_QUESTIONS = [
+  { kr: "끝나면 알려줘. 기다리고 있을게.", en: ["let me know when you're done i'll be waiting", "let me know when you are done i will be waiting"] },
+  { kr: "카페 앞에서 기다리고 있을게!", en: ["i'll be waiting in front of the cafe", "i will be waiting in front of the cafe"] },
+  { kr: "내년 이맘때쯤, 난 뉴욕 여행하고 있을 거야.", en: ["this time next year, i'll be traveling in new york", "this time next year i'll be traveling in new york", "this time next year i will be traveling in new york"] },
+  { kr: "다음달 이맘때쯤, 난 그 회사에서 아마 일하고 있을 거야.", en: ["this time next month, i'll probably be working at that company", "this time next month i'll probably be working at that company", "this time next month i will probably be working at that company"] },
+  { kr: "A: 오늘 계획 있어? B: 나 오늘 저녁 내내 공부하고 있을 거야.", en: ["do you have any plans today i'll be studying all evening", "do you have any plans today i will be studying all evening", "do you have any plans today i'll be studying all night", "do you have any plans today i will be studying all night"] },
+  { kr: "A: 내일 계획 있어? B: 별 거 없어.. 종일 일하고 있을 거야, 불행히도..", en: ["do you have any plans tomorrow nothing much i'll be working all day unfortunately", "do you have any plans tomorrow not really i'll be working all day unfortunately", "do you have any plans tomorrow nothing much i will be working all day unfortunately"] },
+  { kr: "A: 여기서 얼마 동안 머무르세요? B: 저 여기 몇 일 정도 머무를 예정이에요.", en: ["how long are you staying here i'll be staying here for a few days", "how long are you staying here i will be staying here for a few days", "how long are you staying here i'll be staying here for a couple of days"] },
+  { kr: "넌 거기서 무슨 일을 하게 되는 거야?", en: ["what kind of work will you be doing there"] },
+  { kr: "너 내일 뭐 입을 거야? (너 그녀의 결혼식에 뭐 입고 갈 거야?)", en: ["what will you be wearing tomorrow", "what will you be wearing to her wedding"] },
+  { kr: "오늘 밤에 늦게까지 일해?", en: ["will you be working late tonight"] },
+];
+
+const MID_LESSON6_QUESTIONS = [
+  { kr: "너 덕분에, 계속 동기를 유지할 수 있었어!", en: ["thanks to you, i've been able to stay motivated", "thanks to you i've been able to stay motivated", "thanks to you i have been able to stay motivated"] },
+  { kr: "이 수업 시작한 이후로 영어 공부하는 걸 즐길 수 있었어.", en: ["i've been able to enjoy studying english since i started this class", "i have been able to enjoy studying english since i started this class"] },
+  { kr: "나 요즘 잠을 잘 못 잤어. (요즘 잘 못 먹었어)", en: ["i haven't been able to sleep well lately", "i have not been able to sleep well lately", "i haven't been able to eat well lately", "i have not been able to eat well lately"] },
+  { kr: "지난주부터 많은 걸 하지 못 했어.", en: ["i haven't been able to do much since last week", "i have not been able to do much since last week"] },
+  { kr: "오늘 밤까지 그거 끝낼 수 있을 거야.", en: ["i'll be able to finish it by tonight", "i will be able to finish it by tonight"] },
+  { kr: "이번주 주말에 너 만날 수 있을 거야.", en: ["i'll be able to meet you this weekend", "i will be able to meet you this weekend"] },
+  { kr: "그녀가 사무실에서 꼼짝 못하고 있어서, 못 갈 것 같아.", en: ["she's stuck at the office, so she won't be able to make it", "she is stuck at the office so she will not be able to make it"] },
+  { kr: "나 오늘 밤에 못 갈 것 같아.", en: ["i won't be able to make it tonight", "i will not be able to make it tonight"] },
+  { kr: "우리 지금 가면, 테이블 잡을 수 있을지도 몰라.", en: ["if we go now, we might be able to get a table", "if we go now we might be able to get a table"] },
+  { kr: "그가 너를 도와줄 수 있을 지도 몰라.", en: ["he might be able to help you"] },
+  { kr: "나 오늘 퇴근 일찍 할 수 있을지도 몰라.", en: ["i might be able to get off work early today"] },
+  { kr: "그들이 방 업그레이드해줄 수도 있다고 말했어.", en: ["they said they might be able to upgrade our room"] },
+];
+
 // Words people commonly type without the apostrophe (dont, cant, im...) —
 // restore the apostrophe first so expandContractions below still catches them.
 const APOSTROPHE_LESS = {
@@ -1701,7 +2008,19 @@ const TESTS = {
   b_lesson3: { label: "수업 문장 · 3과", questions: LESSON3_QUESTIONS },
   b_lesson5: { label: "수업 문장 · 5과", questions: LESSON5_QUESTIONS },
   b_lesson6: { label: "수업 문장 · 6과", questions: LESSON6_QUESTIONS },
-  b_lesson_all: { label: "수업 문장 · 전체", questions: [...LESSON1_QUESTIONS, ...LESSON2_QUESTIONS, ...LESSON3_QUESTIONS, ...LESSON5_QUESTIONS, ...LESSON6_QUESTIONS] }
+  b_lesson_all: { label: "수업 문장 · 전체", questions: [...LESSON1_QUESTIONS, ...LESSON2_QUESTIONS, ...LESSON3_QUESTIONS, ...LESSON5_QUESTIONS, ...LESSON6_QUESTIONS] },
+  mid_learning: { label: "단어 · 학습", questions: MID_LEARNING_QUESTIONS },
+  mid_reaction: { label: "단어 · 반응", questions: MID_REACTION_QUESTIONS },
+  mid_housework: { label: "단어 · 집안일", questions: MID_HOUSEWORK_QUESTIONS },
+  mid_restaurant: { label: "단어 · 식당", questions: MID_RESTAURANT_QUESTIONS },
+  mid_vocab_all: { label: "단어 · 전체", questions: [...MID_LEARNING_QUESTIONS, ...MID_REACTION_QUESTIONS, ...MID_HOUSEWORK_QUESTIONS, ...MID_RESTAURANT_QUESTIONS] },
+  mid_lesson1: { label: "수업 문장 · 1과", questions: MID_LESSON1_QUESTIONS },
+  mid_lesson2: { label: "수업 문장 · 2과", questions: MID_LESSON2_QUESTIONS },
+  mid_lesson3: { label: "수업 문장 · 3과", questions: MID_LESSON3_QUESTIONS },
+  mid_lesson4: { label: "수업 문장 · 4과", questions: MID_LESSON4_QUESTIONS },
+  mid_lesson5: { label: "수업 문장 · 5과", questions: MID_LESSON5_QUESTIONS },
+  mid_lesson6: { label: "수업 문장 · 6과", questions: MID_LESSON6_QUESTIONS },
+  mid_lesson_all: { label: "수업 문장 · 전체", questions: [...MID_LESSON1_QUESTIONS, ...MID_LESSON2_QUESTIONS, ...MID_LESSON3_QUESTIONS, ...MID_LESSON4_QUESTIONS, ...MID_LESSON5_QUESTIONS, ...MID_LESSON6_QUESTIONS] }
 };
 
 function isGetSentence(q) {
@@ -1723,6 +2042,40 @@ let answered = false;
 let wrongQuestions = [];
 
 const screenMonth = document.getElementById("screenMonth");
+const beginnerLevelBtn = document.getElementById("beginnerLevelBtn");
+const intermediateLevelBtn = document.getElementById("intermediateLevelBtn");
+const myLevelBtn = document.getElementById("myLevelBtn");
+const screenBeginner = document.getElementById("screenBeginner");
+const backFromBeginner = document.getElementById("backFromBeginner");
+const beginnerABtn = document.getElementById("beginnerABtn");
+const beginnerBBtn = document.getElementById("beginnerBBtn");
+const screenIntermediate = document.getElementById("screenIntermediate");
+const backFromIntermediate = document.getElementById("backFromIntermediate");
+const intermediateABtn = document.getElementById("intermediateABtn");
+const screenIntermediateA = document.getElementById("screenIntermediateA");
+const backFromIntermediateA = document.getElementById("backFromIntermediateA");
+const midVocabBtn = document.getElementById("midVocabBtn");
+const midLessonBtn = document.getElementById("midLessonBtn");
+const screenIntermediateVocabCategory = document.getElementById("screenIntermediateVocabCategory");
+const backFromIntermediateVocab = document.getElementById("backFromIntermediateVocab");
+const midLearningBtn = document.getElementById("midLearningBtn");
+const midReactionBtn = document.getElementById("midReactionBtn");
+const midHouseworkBtn = document.getElementById("midHouseworkBtn");
+const midRestaurantBtn = document.getElementById("midRestaurantBtn");
+const midVocabAllBtn = document.getElementById("midVocabAllBtn");
+const screenIntermediateLessonCategory = document.getElementById("screenIntermediateLessonCategory");
+const backFromIntermediateLesson = document.getElementById("backFromIntermediateLesson");
+const midLesson1Btn = document.getElementById("midLesson1Btn");
+const midLesson2Btn = document.getElementById("midLesson2Btn");
+const midLesson3Btn = document.getElementById("midLesson3Btn");
+const midLesson4Btn = document.getElementById("midLesson4Btn");
+const midLesson5Btn = document.getElementById("midLesson5Btn");
+const midLesson6Btn = document.getElementById("midLesson6Btn");
+const midLessonAllBtn = document.getElementById("midLessonAllBtn");
+const screenMySentencesVersion = document.getElementById("screenMySentencesVersion");
+const backFromMySentencesVersion = document.getElementById("backFromMySentencesVersion");
+const mySentencesV1Btn = document.getElementById("mySentencesV1Btn");
+const mySentencesV2Btn = document.getElementById("mySentencesV2Btn");
 const screenTestsA = document.getElementById("screenTestsA");
 const screenTestsB = document.getElementById("screenTestsB");
 const screenCategoryB = document.getElementById("screenCategoryB");
@@ -1734,10 +2087,6 @@ const lesson3Btn = document.getElementById("lesson3Btn");
 const lesson5Btn = document.getElementById("lesson5Btn");
 const lesson6Btn = document.getElementById("lesson6Btn");
 const lessonAllBtn = document.getElementById("lessonAllBtn");
-const mySentencesBtn = document.getElementById("mySentencesBtn");
-const mySentences2Btn = document.getElementById("mySentences2Btn");
-const monthABtn = document.getElementById("monthABtn");
-const monthBBtn = document.getElementById("monthBBtn");
 const backFromA = document.getElementById("backFromA");
 const backFromB = document.getElementById("backFromB");
 const backFromCategoryB = document.getElementById("backFromCategoryB");
@@ -1782,6 +2131,12 @@ const reviewWrongBtn = document.getElementById("reviewWrongBtn");
 
 function hideAllScreens() {
   screenMonth.style.display = "none";
+  screenBeginner.style.display = "none";
+  screenIntermediate.style.display = "none";
+  screenIntermediateA.style.display = "none";
+  screenIntermediateVocabCategory.style.display = "none";
+  screenIntermediateLessonCategory.style.display = "none";
+  screenMySentencesVersion.style.display = "none";
   screenTestsA.style.display = "none";
   screenTestsB.style.display = "none";
   screenCategoryB.style.display = "none";
@@ -1797,6 +2152,36 @@ function hideAllScreens() {
 function showMonthSelect() {
   hideAllScreens();
   screenMonth.style.display = "block";
+}
+
+function showBeginnerSelect() {
+  hideAllScreens();
+  screenBeginner.style.display = "block";
+}
+
+function showIntermediateSelect() {
+  hideAllScreens();
+  screenIntermediate.style.display = "block";
+}
+
+function showIntermediateA() {
+  hideAllScreens();
+  screenIntermediateA.style.display = "block";
+}
+
+function showIntermediateVocabCategory() {
+  hideAllScreens();
+  screenIntermediateVocabCategory.style.display = "block";
+}
+
+function showIntermediateLessonCategory() {
+  hideAllScreens();
+  screenIntermediateLessonCategory.style.display = "block";
+}
+
+function showMySentencesVersion() {
+  hideAllScreens();
+  screenMySentencesVersion.style.display = "block";
 }
 
 function showTestsA() {
@@ -2012,12 +2397,36 @@ answerInput.addEventListener("keydown", (e) => {
 
 restartBtn.addEventListener("click", backToSetup);
 reviewWrongBtn.addEventListener("click", reviewWrongOnly);
-mySentencesBtn.addEventListener("click", () => selectTest("my_sentences"));
-mySentences2Btn.addEventListener("click", () => selectTest("my_sentences_2"));
-monthABtn.addEventListener("click", showTestsA);
-monthBBtn.addEventListener("click", showTestsB);
-backFromA.addEventListener("click", showMonthSelect);
-backFromB.addEventListener("click", showMonthSelect);
+beginnerLevelBtn.addEventListener("click", showBeginnerSelect);
+intermediateLevelBtn.addEventListener("click", showIntermediateSelect);
+myLevelBtn.addEventListener("click", showMySentencesVersion);
+backFromBeginner.addEventListener("click", showMonthSelect);
+beginnerABtn.addEventListener("click", showTestsA);
+beginnerBBtn.addEventListener("click", showTestsB);
+backFromIntermediate.addEventListener("click", showMonthSelect);
+intermediateABtn.addEventListener("click", showIntermediateA);
+backFromIntermediateA.addEventListener("click", showIntermediateSelect);
+midVocabBtn.addEventListener("click", showIntermediateVocabCategory);
+midLessonBtn.addEventListener("click", showIntermediateLessonCategory);
+backFromIntermediateVocab.addEventListener("click", showIntermediateA);
+midLearningBtn.addEventListener("click", () => selectTest("mid_learning"));
+midReactionBtn.addEventListener("click", () => selectTest("mid_reaction"));
+midHouseworkBtn.addEventListener("click", () => selectTest("mid_housework"));
+midRestaurantBtn.addEventListener("click", () => selectTest("mid_restaurant"));
+midVocabAllBtn.addEventListener("click", () => selectTest("mid_vocab_all"));
+backFromIntermediateLesson.addEventListener("click", showIntermediateA);
+midLesson1Btn.addEventListener("click", () => selectTest("mid_lesson1"));
+midLesson2Btn.addEventListener("click", () => selectTest("mid_lesson2"));
+midLesson3Btn.addEventListener("click", () => selectTest("mid_lesson3"));
+midLesson4Btn.addEventListener("click", () => selectTest("mid_lesson4"));
+midLesson5Btn.addEventListener("click", () => selectTest("mid_lesson5"));
+midLesson6Btn.addEventListener("click", () => selectTest("mid_lesson6"));
+midLessonAllBtn.addEventListener("click", () => selectTest("mid_lesson_all"));
+backFromMySentencesVersion.addEventListener("click", showMonthSelect);
+mySentencesV1Btn.addEventListener("click", () => selectTest("my_sentences"));
+mySentencesV2Btn.addEventListener("click", () => selectTest("my_sentences_2"));
+backFromA.addEventListener("click", showBeginnerSelect);
+backFromB.addEventListener("click", showBeginnerSelect);
 backFromCategoryB.addEventListener("click", showTestsB);
 testVocabBtn.addEventListener("click", () => selectTest("vocab"));
 testWhBtn.addEventListener("click", () => selectTest("wh"));
