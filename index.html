@@ -1855,9 +1855,15 @@ function expandContractions(s) {
     .replace(/\b(\w+)'d\b/g, "$1 would");
 }
 
+// iOS/mobile keyboards auto-convert straight quotes to curly ones (’) as you type —
+// normalize those back to a plain apostrophe before contraction handling runs.
+function normalizeQuotes(s) {
+  return s.replace(/[‘’ʼ]/g, "'");
+}
+
 function normalize(s) {
-  return expandContractions(s.toLowerCase().trim())
-    .replace(/[.,!?'"]/g, "")
+  return expandContractions(normalizeQuotes(s.toLowerCase().trim()))
+    .replace(/[.,!?'"“”]/g, "")
     .replace(/\s+/g, " ");
 }
 
