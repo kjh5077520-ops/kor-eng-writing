@@ -335,6 +335,10 @@
       <div class="test-title">내 문장</div>
       <div class="test-desc">V.1 · V.2 · V.3</div>
     </button>
+    <button class="test-card-btn" id="cafeLevelBtn" type="button">
+      <div class="test-title">카페</div>
+      <div class="test-desc">호주 카페 영어 치트시트 · 인사 · 주문 · 결제 · 서빙</div>
+    </button>
   </div>
 
   <div class="card" id="screenBeginner" style="display:none;">
@@ -506,6 +510,39 @@
     <button class="test-card-btn" id="midbLessonAllBtn" type="button">
       <div class="test-title">전체 (All)</div>
       <div class="test-desc">1~6과 전체 80문제</div>
+    </button>
+  </div>
+
+  <div class="card" id="screenCafe" style="display:none;">
+    <button class="btn-secondary back-btn" id="backFromCafe" type="button">← 처음으로</button>
+    <div class="prompt-label">카페 · 카테고리 선택</div>
+    <button class="test-card-btn" id="cafeGreetBtn" type="button">
+      <div class="test-title">인사 &amp; 스몰토크</div>
+      <div class="test-desc">아침 · 점심 · 저녁 · 스몰토크 14문제</div>
+    </button>
+    <button class="test-card-btn" id="cafeOrderBtn" type="button">
+      <div class="test-title">주문 받기</div>
+      <div class="test-desc">주문 받는 표현 7문제</div>
+    </button>
+    <button class="test-card-btn" id="cafePayBtn" type="button">
+      <div class="test-title">결제</div>
+      <div class="test-desc">결제가 안 될 때 순서대로 쓰는 표현 7문제</div>
+    </button>
+    <button class="test-card-btn" id="cafeSorryBtn" type="button">
+      <div class="test-title">손님에게 양해 구하기</div>
+      <div class="test-desc">잠시만 · 확인 · 다른 직원 3문제</div>
+    </button>
+    <button class="test-card-btn" id="cafeServeBtn" type="button">
+      <div class="test-title">서빙 &amp; 테이블</div>
+      <div class="test-desc">자리 안내 · 음식 낼 때 · 식사 중 · 치울 때 14문제</div>
+    </button>
+    <button class="test-card-btn" id="cafeMoreBtn" type="button">
+      <div class="test-title">추가 표현</div>
+      <div class="test-desc">포장 · 사이즈 · 우유 · 단골 스몰토크 6문제</div>
+    </button>
+    <button class="test-card-btn" id="cafeAllBtn" type="button">
+      <div class="test-title">전체 (All)</div>
+      <div class="test-desc">카페 영어 치트시트 전체 51문제</div>
     </button>
   </div>
 
@@ -2137,6 +2174,77 @@ function dedupeByKorean(arr) {
 
 // Words people commonly type without the apostrophe (dont, cant, im...) —
 // restore the apostrophe first so expandContractions below still catches them.
+// ===== 카페 영어 치트시트 =====
+// 축약형(it's / it is), 마침표·쉼표·물음표 유무, really/very/such 등 강조어는 채점 때 무시됩니다.
+const CAFE_GREET_QUESTIONS = [
+  { kr: "안녕하세요, 좋은 아침이에요. 잘 지내세요?", en: ["hi good morning how are you", "hello good morning how are you", "hey good morning how are you", "hi good morning how are you doing"] },
+  { kr: "오늘 날씨 정말 좋죠?", en: ["hi it's such a beautiful day isn't it", "hi it's a beautiful day isn't it", "hi it's a lovely day isn't it", "hi it's such a lovely day isn't it", "hi it's a nice day isn't it", "hi it's such a nice day isn't it", "hi its such a beautiful day isnt it", "hi its a beautiful day isnt it"] },
+  { kr: "(손님 나갈 때) 좋은 하루 보내세요.", en: ["have a lovely day", "enjoy your day", "have a good one", "have a good day", "have a great day", "have a nice day"] },
+  { kr: "안녕하세요, 잘 지내세요?", en: ["hi how's it going", "hello how's it going", "hey how's it going"] },
+  { kr: "안녕하세요, 오늘 하루 어떠세요?", en: ["hi how's your day going", "hello how's your day going", "hey how's your day going"] },
+  { kr: "점심으로 뭐 찾으세요?", en: ["what are you after for lunch", "what are you looking for for lunch", "what would you like for lunch"] },
+  { kr: "(손님 나갈 때) 좋은 오후 보내세요.", en: ["have a lovely afternoon", "enjoy your afternoon", "have a good afternoon", "have a great afternoon", "have a nice afternoon"] },
+  { kr: "안녕하세요, 오늘 하루 어떠셨어요?", en: ["hi how's your day been so far", "hello how's your day been so far", "hey how's your day been so far", "hi how has your day been so far"] },
+  { kr: "(손님 나갈 때) 좋은 저녁 보내세요.", en: ["have a lovely evening", "enjoy your evening", "have a good evening", "have a great evening", "have a nice evening"] },
+  { kr: "이 근처 사세요?", en: ["do you live around here", "do you live near here", "do you live nearby"] },
+  { kr: "여기 와보신 적 있으세요?", en: ["have you been here before", "have you ever been here before", "have you been here"] },
+  { kr: "이 근처에서 일하세요?", en: ["do you work around here", "do you work near here", "do you work nearby"] },
+  { kr: "저 여기 완전 처음이에요.", en: ["i'm totally new here", "i'm new here", "i'm completely new here", "i am totally new here"] },
+  { kr: "저 여기서 일한 지 얼마 안 됐어요.", en: ["i just started working here", "i started working here recently", "i only just started working here", "i have just started working here"] },
+];
+
+const CAFE_ORDER_QUESTIONS = [
+  { kr: "뭐 드시겠어요?", en: ["what can i get you", "what can i get for you"] },
+  { kr: "어떤 거 드시겠어요?", en: ["what would you like", "what would you like to have"] },
+  { kr: "무엇을 도와드릴까요?", en: ["how can i help you", "how can i help"] },
+  { kr: "주문하시겠어요?", en: ["are you ready to order", "are you ready to order now", "would you like to order"] },
+  { kr: "뭐 찾으세요? (호주에서 자주 씀)", en: ["what are you after", "what are you looking for"] },
+  { kr: "데워드릴까요?", en: ["would you like it warmed up", "do you want me to warm it up", "would you like me to warm it up", "would you like it heated up"] },
+  { kr: "주문하신 분 성함 알려주세요.", en: ["can i get your name for the order", "can i get a name for the order", "can i have your name for the order"] },
+];
+
+const CAFE_PAY_QUESTIONS = [
+  { kr: "위에 카드 대주세요.", en: ["just tap on top please", "please tap on top", "tap on top please"] },
+  { kr: "결제가 안 된 것 같아요.", en: ["i don't think it went through", "i don't think it worked", "it doesn't look like it went through"] },
+  { kr: "다시 한 번 대주시겠어요?", en: ["would you mind tapping again", "would you mind tapping it again", "would you mind tapping one more time", "could you tap again please", "can you tap again please"] },
+  { kr: "대신 카드를 꽂아주시겠어요?", en: ["would you mind inserting your card instead", "would you mind inserting the card instead", "could you insert your card instead", "can you insert your card instead"] },
+  { kr: "다른 카드로 해보시겠어요?", en: ["would you mind trying another card", "would you mind trying a different card", "could you try another card", "could you try a different card", "can you try another card"] },
+  { kr: "천천히 하세요.", en: ["take your time", "no rush", "no need to rush"] },
+  { kr: "드디어 결제됐어요!", en: ["it finally went through", "it finally worked", "it went through finally"] },
+];
+
+const CAFE_SORRY_QUESTIONS = [
+  { kr: "잠시만 기다려주세요.", en: ["just a moment please", "would you mind waiting a moment", "one moment please", "just a second please", "would you mind waiting a moment please"] },
+  { kr: "확인해볼게요.", en: ["let me check for you", "let me check", "i'll check for you", "let me have a look for you"] },
+  { kr: "다른 직원분 불러드릴게요.", en: ["let me get someone for you", "let me grab someone for you", "i'll get someone for you", "let me get somebody for you"] },
+];
+
+const CAFE_SERVE_QUESTIONS = [
+  { kr: "메뉴판 드릴게요, 천천히 보세요.", en: ["here's the menu take your time", "here is the menu take your time", "here's the menu no rush"] },
+  { kr: "물 드릴게요.", en: ["here's some water for you", "here is some water for you", "here's some water", "here's your water"] },
+  { kr: "메뉴판이랑 물 드릴게요.", en: ["here's the menu and some water for you", "here is the menu and some water for you", "here's the menu and some water", "here's the menu and water for you"] },
+  { kr: "맛있게 드세요!", en: ["here you go enjoy", "here you are enjoy", "enjoy your meal", "here you go enjoy your meal"] },
+  { kr: "아침 식사 나왔습니다, 맛있게 드세요.", en: ["here's your breakfast enjoy", "here is your breakfast enjoy", "here's your breakfast enjoy your meal", "your breakfast is here enjoy"] },
+  { kr: "필요한 거 있으면 말씀해주세요.", en: ["let me know if you need anything else", "let me know if you need anything", "let me know if there's anything else you need", "let me know if you need something else"] },
+  { kr: "식사는 괜찮으세요?", en: ["how's everything", "how's your meal", "how is everything", "how's everything going", "how's everything tasting"] },
+  { kr: "(손님이 좋다고 할 때) 다행이에요!", en: ["that's great to hear", "that's good to hear", "great to hear", "glad to hear that", "i'm glad to hear that"] },
+  { kr: "(손님이 고맙다고 할 때) 천만에요!", en: ["no worries", "no problem", "you're welcome", "not a problem"] },
+  { kr: "아직 드시고 계신가요?", en: ["are you still working on that", "are you still working on it", "are you still eating", "are you still enjoying that", "are you done with that"] },
+  { kr: "이거 아직 쓰세요?", en: ["are you still using these", "are you still using this", "are you still using those", "are you still using them"] },
+  { kr: "이거 치워드려도 될까요?", en: ["can i take these for you", "can i take these away for you", "can i take these", "can i take this for you", "can i take this away for you"] },
+  { kr: "컵 치워드려도 될까요?", en: ["can i take your cup", "can i take your cup for you", "can i take the cup", "can i take your cup away", "can i take your cup away for you"] },
+  { kr: "(손님 답변) 아직 먹고 있어요. / 아직 다 안 먹었어요.", en: ["we're still working on it", "we're not done yet", "we're still eating", "i'm still working on it", "i'm not done yet", "we are still working on it", "we are not done yet"] },
+];
+
+const CAFE_MORE_QUESTIONS = [
+  { kr: "드시고 가세요, 포장하세요?", en: ["dine in or takeaway", "dine in or take away", "eat in or takeaway", "dine in or takeout", "for here or to go"] },
+  { kr: "더 필요한 거 있으세요?", en: ["anything else", "is there anything else", "would you like anything else", "do you need anything else"] },
+  { kr: "사이즈는 어떻게 드릴까요?", en: ["what size would you like", "what size do you want", "which size would you like"] },
+  { kr: "우유는 뭘로 드릴까요?", en: ["what milk would you like", "which milk would you like", "what milk do you want", "what kind of milk would you like"] },
+  { kr: "커피 곧 나와요.", en: ["your coffee will be out shortly", "your coffee will be out soon", "your coffee will be ready shortly", "your coffee will be ready soon", "your coffee is coming shortly"] },
+  { kr: "(단골과 스몰토크) 점심 드셨어요?", en: ["have you had lunch yet", "did you have lunch yet", "have you eaten lunch yet", "did you eat lunch yet"] },
+];
+
 const APOSTROPHE_LESS = {
   dont: "don't", cant: "can't", wont: "won't", shant: "shan't",
   isnt: "isn't", arent: "aren't", wasnt: "wasn't", werent: "weren't",
@@ -2221,7 +2329,8 @@ const SYNONYM_GROUPS = [
   ["smart", "clever"],
   ["big", "large"],
   ["small", "little"],
-  ["scared", "afraid", "frightened"]
+  ["scared", "afraid", "frightened"],
+  ["hi", "hello", "hey"]
 ];
 
 const CANONICAL_WORD = {};
@@ -2246,7 +2355,7 @@ const FILLER_WORDS = new Set([
   "my", "your", "our",
   "absolutely", "extremely", "seriously", "honestly", "literally",
   "truly", "genuinely", "kinda", "sorta", "basically", "completely",
-  "incredibly", "insanely"
+  "incredibly", "insanely", "such"
 ]);
 
 // `keep` lists filler words a question insists on (e.g. the target adverb of an adverb drill).
@@ -2385,7 +2494,14 @@ const TESTS = {
   midb_lesson5: { label: "B · 수업 문장 · 5과", questions: MIDB_LESSON5_QUESTIONS },
   midb_lesson6: { label: "B · 수업 문장 · 6과", questions: MIDB_LESSON6_QUESTIONS },
   midb_lesson_all: { label: "B · 수업 문장 · 전체", questions: dedupeByKorean([...MIDB_LESSON1_QUESTIONS, ...MIDB_LESSON2_QUESTIONS, ...MIDB_LESSON3_QUESTIONS, ...MIDB_LESSON4_QUESTIONS, ...MIDB_LESSON5_QUESTIONS, ...MIDB_LESSON6_QUESTIONS]) },
-  midb_midtest: { label: "B · 중간 테스트", questions: MIDB_MIDTEST_QUESTIONS }
+  midb_midtest: { label: "B · 중간 테스트", questions: MIDB_MIDTEST_QUESTIONS },
+  cafe_greet: { label: "카페 · 인사 & 스몰토크", questions: CAFE_GREET_QUESTIONS },
+  cafe_order: { label: "카페 · 주문 받기", questions: CAFE_ORDER_QUESTIONS },
+  cafe_pay: { label: "카페 · 결제", questions: CAFE_PAY_QUESTIONS },
+  cafe_sorry: { label: "카페 · 손님에게 양해 구하기", questions: CAFE_SORRY_QUESTIONS },
+  cafe_serve: { label: "카페 · 서빙 & 테이블", questions: CAFE_SERVE_QUESTIONS },
+  cafe_more: { label: "카페 · 추가 표현", questions: CAFE_MORE_QUESTIONS },
+  cafe_all: { label: "카페 · 전체", questions: [...CAFE_GREET_QUESTIONS, ...CAFE_ORDER_QUESTIONS, ...CAFE_PAY_QUESTIONS, ...CAFE_SORRY_QUESTIONS, ...CAFE_SERVE_QUESTIONS, ...CAFE_MORE_QUESTIONS] }
 };
 
 function isGetSentence(q) {
@@ -2410,6 +2526,16 @@ const screenMonth = document.getElementById("screenMonth");
 const beginnerLevelBtn = document.getElementById("beginnerLevelBtn");
 const intermediateLevelBtn = document.getElementById("intermediateLevelBtn");
 const myLevelBtn = document.getElementById("myLevelBtn");
+const cafeLevelBtn = document.getElementById("cafeLevelBtn");
+const screenCafe = document.getElementById("screenCafe");
+const backFromCafe = document.getElementById("backFromCafe");
+const cafeGreetBtn = document.getElementById("cafeGreetBtn");
+const cafeOrderBtn = document.getElementById("cafeOrderBtn");
+const cafePayBtn = document.getElementById("cafePayBtn");
+const cafeSorryBtn = document.getElementById("cafeSorryBtn");
+const cafeServeBtn = document.getElementById("cafeServeBtn");
+const cafeMoreBtn = document.getElementById("cafeMoreBtn");
+const cafeAllBtn = document.getElementById("cafeAllBtn");
 const screenBeginner = document.getElementById("screenBeginner");
 const backFromBeginner = document.getElementById("backFromBeginner");
 const beginnerABtn = document.getElementById("beginnerABtn");
@@ -2528,6 +2654,7 @@ function hideAllScreens() {
   screenIntermediateBVocabCategory.style.display = "none";
   screenIntermediateBLessonCategory.style.display = "none";
   screenMySentencesVersion.style.display = "none";
+  screenCafe.style.display = "none";
   screenTestsA.style.display = "none";
   screenTestsB.style.display = "none";
   screenCategoryB.style.display = "none";
@@ -2583,6 +2710,11 @@ function showIntermediateBVocabCategory() {
 function showIntermediateBLessonCategory() {
   hideAllScreens();
   screenIntermediateBLessonCategory.style.display = "block";
+}
+
+function showCafe() {
+  hideAllScreens();
+  screenCafe.style.display = "block";
 }
 
 function showMySentencesVersion() {
@@ -2806,6 +2938,15 @@ reviewWrongBtn.addEventListener("click", reviewWrongOnly);
 beginnerLevelBtn.addEventListener("click", showBeginnerSelect);
 intermediateLevelBtn.addEventListener("click", showIntermediateSelect);
 myLevelBtn.addEventListener("click", showMySentencesVersion);
+cafeLevelBtn.addEventListener("click", showCafe);
+backFromCafe.addEventListener("click", showMonthSelect);
+cafeGreetBtn.addEventListener("click", () => selectTest("cafe_greet"));
+cafeOrderBtn.addEventListener("click", () => selectTest("cafe_order"));
+cafePayBtn.addEventListener("click", () => selectTest("cafe_pay"));
+cafeSorryBtn.addEventListener("click", () => selectTest("cafe_sorry"));
+cafeServeBtn.addEventListener("click", () => selectTest("cafe_serve"));
+cafeMoreBtn.addEventListener("click", () => selectTest("cafe_more"));
+cafeAllBtn.addEventListener("click", () => selectTest("cafe_all"));
 backFromBeginner.addEventListener("click", showMonthSelect);
 beginnerABtn.addEventListener("click", showTestsA);
 beginnerBBtn.addEventListener("click", showTestsB);
